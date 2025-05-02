@@ -89,7 +89,6 @@ const authMiddleware = async (req, res, next) => {
 			req.user = decoded 
 			next()
 		}
-		return res.json(new ApiError(400, "invalid token"))
 	} catch (error) {
 		return res.json(new ApiError(400, "invalid token"))
 	}

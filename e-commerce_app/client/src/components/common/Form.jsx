@@ -2,12 +2,13 @@ import React from "react";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
-import { Select, SelectItem } from "../ui/select";
 import {
+  Select,
+  SelectItem,
   SelectContent,
   SelectTrigger,
   SelectValue,
-} from "@radix-ui/react-select";
+} from "../ui/select";
 import { Button } from "../ui/button";
 
 function CommonForm({
@@ -21,14 +22,14 @@ function CommonForm({
   function renderElementByContentType(getControlItem) {
     let element = null;
     let value = formData[getControlItem.name] || "";
-    
+
     switch (getControlItem.componentType) {
       case "input":
         element = (
           <Input
             name={getControlItem.name}
             placeholder={getControlItem.placeholder}
-            type={getControlItem.componentType}
+            type={getControlItem.type}
             id={getControlItem.name}
             value={value}
             onChange={(e) => {
@@ -54,7 +55,7 @@ function CommonForm({
             }}
           >
             <SelectTrigger className="w-full">
-              <SelectValue placeholder={getControlItem.placeholder} />
+              <SelectValue placeholder={getControlItem.label} />
             </SelectTrigger>
             <SelectContent>
               {getControlItem.options && getControlItem.options.length > 0
