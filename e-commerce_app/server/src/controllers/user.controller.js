@@ -57,7 +57,7 @@ const loginUser = asyncHandler(async (req, res) => {
 	}
 
 	const token = Jwt.sign(
-		{ _id: user._id, email: user.email, role: user.role },
+		{ _id: user._id, email: user.email, role: user.role, username: user.username },
 		process.env.JWT_PRIVATE_KEY,
 		{ algorithm: "HS256" }
 	);

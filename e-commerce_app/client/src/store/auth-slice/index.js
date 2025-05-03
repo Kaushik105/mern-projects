@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios, { formToJSON } from "axios";
+import axios from "axios";
 
 const initialState = {
   isAuthenticated: false,

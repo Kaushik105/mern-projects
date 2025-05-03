@@ -1,10 +1,8 @@
 import { imageUploadUtil } from "../helpers/cloudinary.js";
-import {Product} from "../models/product.model.js";
+import { Product } from "../models/product.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-
-
 
 const handleImageUpload = asyncHandler(async (req, res) => {
 	const b64 = Buffer.from(req.file.buffer).toString("base64");
@@ -12,7 +10,6 @@ const handleImageUpload = asyncHandler(async (req, res) => {
 	const result = await imageUploadUtil(url);
 	return res.json(new ApiResponse(200, result, "image uploaded"));
 });
-
 
 //add a product
 
@@ -24,22 +21,22 @@ const addProduct = asyncHandler(async (req, res) => {
 		category,
 		brand,
 		price,
-		salePrice,
+		salesPrice,
 		totalStock,
 		averageReview,
 	} = req.body;
 
 	if (
 		!(
-			image ||
-			title ||
-			description ||
-			category ||
-			brand ||
-			price ||
-			salePrice ||
-			totalStock ||
-			averageReview
+			image &&
+			title &&
+			description &&
+			category &&
+			brand &&
+			price &&
+			salesPrice != null &&
+			totalStock &&
+			averageReview != null
 		)
 	) {
 		return res.json(new ApiError(500, "can't get parameters"));
@@ -52,7 +49,7 @@ const addProduct = asyncHandler(async (req, res) => {
 		category,
 		brand,
 		price,
-		salePrice,
+		salesPrice,
 		totalStock,
 		averageReview,
 	});
@@ -69,7 +66,7 @@ const fetchAllProducts = asyncHandler(async (req, res) => {
 	if (products.length === 0) {
 		return res.json(new ApiError(500, "product fetching failed"));
 	}
-	return res.json(new ApiResponse(200, "All products fetched"));
+	return res.json(new ApiResponse(200, products, "All products fetched"));
 });
 
 //edit a product
@@ -83,7 +80,7 @@ const editProduct = asyncHandler(async (req, res) => {
 		category,
 		brand,
 		price,
-		salePrice,
+		salesPrice,
 		totalStock,
 		averageReview,
 	} = req.body;
@@ -103,11 +100,19 @@ const editProduct = asyncHandler(async (req, res) => {
 		category: category || product.category,
 		brand: brand || product.brand,
 		price: price === "" ? 0 : price || product.price,
-		salePrice: salePrice === "" ? 0 : salePrice || product.salePrice,
+		salesPrice: salesPrice === "" ? 0 : salesPrice ,
 		totalStock: totalStock || product.totalStock,
 		image: image || product.image,
 		averageReview: averageReview || product.averageReview,
 	});
+
+	if (!updatedProduct) {
+		return res.json(new ApiError(500, "Product update failed"));
+	}
+
+	return res
+		.status(200)
+		.json(new ApiResponse(200, updatedProduct, "product update successful"));
 });
 
 //delete product
@@ -121,6 +126,15 @@ const deleteProduct = asyncHandler(async (req, res) => {
 	if (!product) {
 		return res.json(new ApiError(500, "can't delete product "));
 	}
+	return res
+		.status(200)
+		.json(new ApiResponse(200, product, "product deletion successful"));
 });
 
-export {addProduct, fetchAllProducts, editProduct, deleteProduct, handleImageUpload}
+export {
+	addProduct,
+	fetchAllProducts,
+	editProduct,
+	deleteProduct,
+	handleImageUpload,
+};

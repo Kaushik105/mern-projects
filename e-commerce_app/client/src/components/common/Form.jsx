@@ -20,9 +20,9 @@ function CommonForm({
   isBtnDisabled,
 }) {
   function renderElementByContentType(getControlItem) {
+    
     let element = null;
     let value = formData[getControlItem.name] || "";
-
     switch (getControlItem.componentType) {
       case "input":
         element = (
