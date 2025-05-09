@@ -2,7 +2,9 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import authRouter from "./routes/user.route.js"
-import adminProductRouter from "./routes/admin/product.router.js"
+import adminProductRouter from "./routes/admin/product.route.js"
+import shopProductRouter from "./routes/shop/product.route.js"
+import shopCartRouter from "./routes/shop/cart.route.js"
 
 const app = express();
 
@@ -30,5 +32,7 @@ app.use(express.urlencoded({extended: true}))
 // --Routes--
 app.use("/api/auth", authRouter);
 app.use("/api/admin/products", adminProductRouter)
+app.use("/api/shop/products", shopProductRouter)
+app.use("/api/shop/cart", shopCartRouter)
 
 export { app };

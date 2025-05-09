@@ -32,7 +32,7 @@ const productSchema = new mongoose.Schema(
 		totalStock: {
 			type: Number,
 		},
-		averagereview: {
+		averageReview: {
 			type: Number,
 		},
 	},

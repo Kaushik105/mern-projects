@@ -6,7 +6,7 @@ import {
 	editProduct,
 	fetchAllProducts,
 	handleImageUpload,
-} from "../../controllers/product.controller.js";
+} from "../../controllers/admin/product.controller.js";
 
 const router = Router();
 

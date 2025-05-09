@@ -1,8 +1,8 @@
-import { imageUploadUtil } from "../helpers/cloudinary.js";
-import { Product } from "../models/product.model.js";
-import { ApiError } from "../utils/ApiError.js";
-import { ApiResponse } from "../utils/ApiResponse.js";
-import { asyncHandler } from "../utils/asyncHandler.js";
+import { imageUploadUtil } from "../../helpers/cloudinary.js";
+import { Product } from "../../models/product.model.js";
+import { ApiError } from "../../utils/ApiError.js";
+import { ApiResponse } from "../../utils/ApiResponse.js";
+import { asyncHandler } from "../../utils/asyncHandler.js";
 
 const handleImageUpload = asyncHandler(async (req, res) => {
 	const b64 = Buffer.from(req.file.buffer).toString("base64");

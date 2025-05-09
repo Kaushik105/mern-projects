@@ -115,6 +115,7 @@ function ShoppingHeader() {
             className={"w-full max-w-xs p-5  pt-7 lg:hidden block"}
           >
             <MenuItems />
+            <HeaderRightcontent/>
           </SheetContent>
         </Sheet>
         <div className="hidden lg:block">

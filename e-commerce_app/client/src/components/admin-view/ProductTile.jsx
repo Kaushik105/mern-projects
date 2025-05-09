@@ -23,7 +23,7 @@ function AdminProductTile({
   }
 
   return (
-    <Card className="w-full max-w-[300px] flex items-center gap-3 p-0">
+    <Card className="w-full max-w-[300px] flex items-center gap-3 p-0" >
       <div>
         <img
           src={product.image}
@@ -39,10 +39,10 @@ function AdminProductTile({
               product.salesPrice > 0 && "line-through text-gray-700"
             }`}
           >
-            {product.price}
+            ${product.price}
           </p>
           {product.salesPrice > 0 && (
-            <p className="font-semibold text-md">{product.salesPrice}</p>
+            <p className="font-semibold text-md">${product.salesPrice}</p>
           )}
         </span>
       </CardContent>
