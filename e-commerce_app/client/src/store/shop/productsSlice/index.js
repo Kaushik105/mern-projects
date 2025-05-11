@@ -15,7 +15,6 @@ export const getFilteredProducts = createAsyncThunk(
 
     const response = await axios.get(
       `http://localhost:3000/api/shop/products/get?${query}`,
-      {},
       {
         headers: {
           "Content-Type": "application/json ",

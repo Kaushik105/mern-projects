@@ -1,8 +1,8 @@
-import { asyncHandler } from "../../utils/asyncHandler";
-import ApiError from "../../utils/ApiError";
-import ApiResponse from "../../utils/ApiResponse.js";
-import Cart from "../../models/cart.model.js";
-import Product from "../../models/product.model.js";
+import { asyncHandler } from "../../utils/asyncHandler.js";
+import { ApiError } from "../../utils/ApiError.js";
+import { ApiResponse } from "../../utils/ApiResponse.js";
+import { Cart } from "../../models/cart.model.js";
+import { Product } from "../../models/product.model.js";
 
 //create a cart
 const addToCart = asyncHandler(async (req, res) => {
@@ -18,25 +18,45 @@ const addToCart = asyncHandler(async (req, res) => {
 		return res.json(new ApiError(500, "product not found"));
 	}
 
-	const cart = await Cart.findOne({ userId });
+	let cart = await Cart.findOne({ userId });
 
 	if (!cart) {
 		cart = new Cart({ userId, items: [] });
-	}
-
-	const findIndex = cart.items.map(
-		(item) => item.productId.toString() === productId
-	);
-
-	if (findIndex === -1) {
 		cart.items.push({ productId, quantity });
 	} else {
-		cart.items[findIndex].quantity += quantity;
-	}
+		const findIndex = cart.items.findIndex(
+			(item) => item.productId.toString() === productId
+		);
 
+		if (findIndex === -1) {
+			cart.items.push({ productId, quantity });
+		} else {
+			cart.items[findIndex].quantity += quantity;
+		}
+	}
 	await cart.save();
 
-	return res.json(new ApiResponse(200, cart, "New cart created"));
+	cart = await Cart.findOne({ userId }).populate({
+		path: "items.productId",
+		select: "image title price salesPrice",
+	});
+
+	const populatedCartItems = cart.items.map((item) => ({
+		productId: item.productId._id,
+		image: item.productId.image,
+		price: item.productId.price,
+		title: item.productId.title,
+		salesPrice: item.productId.salesPrice,
+		quantity: item.quantity,
+	}));
+
+	return res.json(
+		new ApiResponse(
+			200,
+			{ ...cart._doc, items: populatedCartItems },
+			"Added to cart"
+		)
+	);
 });
 
 //fetch cart
@@ -48,8 +68,8 @@ const fetchCartItems = asyncHandler(async (req, res) => {
 		return res.json(new ApiError(400, "invalid parameters"));
 	}
 
-	const cart = await Cart.fincOne({ userId }).populate({
-		path: "items.producId",
+	const cart = await Cart.findOne({ userId }).populate({
+		path: "items.productId",
 		select: "image title price salesPrice",
 	});
 
@@ -57,7 +77,7 @@ const fetchCartItems = asyncHandler(async (req, res) => {
 		return res.json(new ApiError(500, "Cart not found"));
 	}
 
-	const validItems = cart.items.map((productItem) => productItem.productId);
+	const validItems = cart.items.filter((productItem) => productItem.productId);
 
 	if (validItems.length < cart.items.length) {
 		cart.items = validItems;
@@ -85,9 +105,9 @@ const fetchCartItems = asyncHandler(async (req, res) => {
 //update cart
 
 const updateCartItemQty = asyncHandler(async (req, res) => {
-	const { userId, productId, quantity = 1 } = req.body;
+	const { userId, productId, quantity } = req.body;
 
-	if (!userId || !productId || quantity <= 0) {
+	if (!userId || !productId || !quantity) {
 		return res.json(new ApiError(400, "invalid parameters"));
 	}
 
@@ -97,19 +117,18 @@ const updateCartItemQty = asyncHandler(async (req, res) => {
 		return res.json(new ApiError(500, "cart not found"));
 	}
 
-	const findIndex = cart.items.map(
+	const findIndex = cart.items.findIndex(
 		(item) => item.productId.toString() === productId
 	);
 
 	if (findIndex === -1) {
 		return res.json(new ApiError(500, "cart item not found"));
 	}
-
-	cart.items[findIndex].quantity = quantity;
+	cart.items[findIndex].quantity += quantity;
 	await cart.save();
 
 	await cart.populate({
-		path: "items.producId",
+		path: "items.productId",
 		select: "image title price salesPrice",
 	});
 
@@ -119,7 +138,7 @@ const updateCartItemQty = asyncHandler(async (req, res) => {
 		title: item.productId ? item.productId.title : null,
 		price: item.productId ? item.productId.price : null,
 		salesPrice: item.productId ? item.productId.salesPrice : null,
-		quantity: item.productId ? item.qauntity : null,
+		quantity: item.productId ? item.quantity : null,
 	}));
 
 	return res.json(
@@ -133,7 +152,7 @@ const updateCartItemQty = asyncHandler(async (req, res) => {
 
 //delete cart
 const deleteCartItem = asyncHandler(async (req, res) => {
-	const { userId, productId } = req.body;
+	const { userId, productId } = req.params;
 
 	if (!userId || !productId) {
 		return res.json(new ApiError(400, "invalid parameters"));
@@ -161,7 +180,7 @@ const deleteCartItem = asyncHandler(async (req, res) => {
 		title: item.productId ? item.productId.title : null,
 		price: item.productId ? item.productId.price : null,
 		salesPrice: item.productId ? item.productId.salesPrice : null,
-		quantity: item.productId ? item.qauntity : null,
+		quantity: item.productId ? item.quantity : null,
 	}));
 
 	return res.json(
