@@ -25,7 +25,10 @@ function MenuItems() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   
-  function handleNavigate(getCurrentMenuItem) {}
+  function handleNavigate(getCurrentMenuItem) {
+    navigate(getCurrentMenuItem.path)
+    
+  }
 
   return (
     <nav className="flex flex-col mb-3 lg:mb-0 lg:items-center gap-6 lg:flex-row">
@@ -33,7 +36,7 @@ function MenuItems() {
         <Label
           key={menuItem.id}
           className="text-sm font-medium cursor-pointer"
-          onClick={handleNavigate(menuItem)}
+          onClick={()=>{handleNavigate(menuItem)}}
         >
           {menuItem.label}
         </Label>

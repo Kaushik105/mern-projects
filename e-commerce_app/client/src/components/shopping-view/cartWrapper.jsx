@@ -7,7 +7,6 @@ function CartWrapper({ cartItems }) {
   const [cartTotal, setcartTotal] = useState(0);
 
   useEffect(() => {
-    console.log("cartItems changed");
 
     if (cartItems && cartItems.length > 0) {
       let total = cartItems?.reduce((acc, item) => {

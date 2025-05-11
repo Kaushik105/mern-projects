@@ -3,8 +3,14 @@ import { Dialog, DialogContent, DialogHeader } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { StarIcon } from "lucide-react";
+import { DialogTitle } from "@radix-ui/react-dialog";
 
-function ProductDetailsDialog({ productDetails, open, setOpen }) {
+function ProductDetailsDialog({
+  productDetails,
+  open,
+  setOpen,
+  handleAddtoCart,
+}) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="max-w-[90vw] grid grid-cols-2 h-[450px] sm:max-w-[80vw] lg:max-w-[70vw] p-6 gap-8">
@@ -19,7 +25,11 @@ function ProductDetailsDialog({ productDetails, open, setOpen }) {
         </div>
         <div className="flex flex-col gap-3">
           <span>
-            <h1 className="text-3xl font-semibold">{productDetails?.title}</h1>
+            <DialogTitle>
+              <h1 className="text-3xl font-semibold">
+                {productDetails?.title}
+              </h1>
+            </DialogTitle>
             <p className="text-muted-foreground text-lg">
               {productDetails?.description}
             </p>
@@ -33,9 +43,7 @@ function ProductDetailsDialog({ productDetails, open, setOpen }) {
               ${productDetails?.price}
             </p>
             {productDetails?.salesPrice > 0 && (
-              <p className=" font-bold">
-                ${productDetails?.salesPrice}
-              </p>
+              <p className=" font-bold">${productDetails?.salesPrice}</p>
             )}
           </div>
           <div className="flex gap-0.5 items-center">

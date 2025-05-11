@@ -50,7 +50,9 @@ function AdminProducts() {
           setImageFile(null);
           setOpenCreateProductDialog(false);
           setUploadedImageUrl(null);
-          toast.success("Product updated successfully");
+          toast.success("Product updated successfully", {
+            duration: 1500,
+          });
         }
       });
     } else {
@@ -66,7 +68,9 @@ function AdminProducts() {
           setImageFile(null);
           setOpenCreateProductDialog(false);
           setUploadedImageUrl(null);
-          toast.success("Product added successfully");
+          toast.success("Product added successfully", {
+            duration: 1500,
+          });
         }
       });
     }

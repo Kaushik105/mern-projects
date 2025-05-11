@@ -23,9 +23,13 @@ function Register() {
       console.log(user);
       if (user.payload?.success) {
         navigate("/auth/login")
-        toast.success(user.payload?.message)
+        toast.success(user.payload?.message, {
+          duration: 1500,
+        });
       }else{
-        toast.error(user.payload?.message)
+        toast.error(user.payload?.message, {
+          duration: 1500,
+        });
       }
      })
    }

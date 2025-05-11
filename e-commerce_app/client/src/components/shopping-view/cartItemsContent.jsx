@@ -5,6 +5,7 @@ import { DiamondPercent, Minus, Plus, Trash } from "lucide-react";
 import { Input } from "../ui/input";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteCart, fetchCartItems, updateCart } from "@/store/shop/cartSlice";
+import { toast } from "sonner";
 
 function CartItemsContent({ cartItem }) {
   const dispatch  = useDispatch()
@@ -12,7 +13,11 @@ function CartItemsContent({ cartItem }) {
 
 
   function handleDeleteCartItem(productId){
-    dispatch(deleteCart({userId: user._id, productId}))
+    dispatch(deleteCart({userId: user._id, productId})).then((data) => { if (data.payload.success) {
+      toast.error("Removed from cart", {
+        duration: 1500,
+      });
+    } })
     
   }
 

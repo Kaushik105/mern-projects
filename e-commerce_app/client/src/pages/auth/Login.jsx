@@ -13,23 +13,23 @@ const initialState = {
 
 function Login() {
   const [formData, setFormData] = useState(initialState);
-  const dispatch = useDispatch()
-  const navigate= useNavigate()
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const onSubmit = (e) => {
-    e.preventDefault()
-    dispatch(loginUser(formData)).then((user) => { 
-      console.log(user);
-      
+    e.preventDefault();
+    dispatch(loginUser(formData)).then((user) => {
       if (user?.payload?.success) {
-        toast.success(user?.payload?.message)
-        navigate("/")
-        console.log(user);
-       }
-       else{
-        toast.error(user?.payload?.message)
-       }
-     })
+        toast.success(user?.payload?.message, {
+          duration: 1500,
+        });
+        navigate("/");
+      } else {
+        toast.error(user?.payload?.message, {
+          duration: 1500,
+        });
+      }
+    });
   };
   return (
     <div className="mx-auto w-full max-w-md space-y-6">
@@ -57,4 +57,4 @@ function Login() {
     </div>
   );
 }
-export default Login
+export default Login;

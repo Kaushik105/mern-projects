@@ -5,7 +5,6 @@ import { sortOptions } from "@/config";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
@@ -21,8 +20,8 @@ import { useSearchParams } from "react-router-dom";
 import ProductDetails from "@/components/shopping-view/ProductDetails";
 import ProductDetailsDialog from "@/components/shopping-view/ProductDetails";
 import { createCart } from "@/store/shop/cartSlice";
-import { fetchAllProducts } from "@/store/admin/productsSlice";
 import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
 
 function createSearchParamHelper(filters) {
   const queryParams = [];
@@ -37,12 +36,12 @@ function createSearchParamHelper(filters) {
   return queryParams.join("&");
 }
 
-function ShoppingListing() {
+function ShoppingListing() {  
   const { productList, productDetails, isLoading } = useSelector(
     (state) => state.shopProducts
   );
   const [sort, setSort] = useState("price-lowtohigh");
-  const [filters, setFilters] = useState({});
+  const [filters, setFilters] = useState();
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -89,20 +88,22 @@ function ShoppingListing() {
         productId: getCurrentProductId,
         quantity: 1,
       })
-    )
+    ).then((data) => {
+      if (data.payload.success) {
+        toast.success("Product added to cart", {
+          duration: 1500,
+        });
+      }
+    });
   }
 
-  useEffect(() => {
-    if (productDetails !== null) {
-      setOpenProductDialog(true);
-    }
-  }, [productDetails]);
 
-  // useEffect(() => {
-  //   setSort("price-lowtohigh");
-  //   setFilters(JSON.parse(sessionStorage.getItem("filters")));
-  //   dispatch(getFilteredProducts());
-  // }, []);
+  useEffect(() => {
+    setSort("price-lowtohigh");
+    setFilters(JSON.parse(sessionStorage.getItem("filters")));
+    dispatch(getFilteredProducts(filters));
+
+  }, []);
 
   useEffect(() => {
     if (filters && Object.keys(filters).length > 0) {
@@ -116,9 +117,10 @@ function ShoppingListing() {
     if (filters !== null && sort !== null) {
       dispatch(
         getFilteredProducts({ filterParams: filters, sortParams: sort })
-      );
+      )
     }
   }, [dispatch, sort, filters]);
+
 
   return (
     <>
@@ -162,7 +164,7 @@ function ShoppingListing() {
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
-            {isLoading && (
+            {(isLoading && productList !== null ) ? (
               <div className="flex flex-col space-y-3">
                 <Skeleton className="h-[125px] w-[250px] rounded-xl bg-gray-700" />
                 <div className="space-y-2">
@@ -170,7 +172,7 @@ function ShoppingListing() {
                   <Skeleton className="h-4 w-[200px] bg-gray-700" />
                 </div>
               </div>
-            )}{" "}
+            ) : null}
             {productList && productList.length > 0
               ? productList.map((productItem) => (
                   <ShoppingProductTile
@@ -187,6 +189,7 @@ function ShoppingListing() {
           setOpen={setOpenProductDialog}
           open={openProductDialog}
           productDetails={productDetails}
+          handleAddtoCart={handleAddtoCart}
         />
       </div>
     </>

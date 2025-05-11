@@ -14,8 +14,9 @@ function handleLogout(e){
   e.preventDefault()
   dispatch(logoutUser(id)).then((data) => { 
     if (data.payload.success) {
-      toast.success(data.payload.data)
-      
+      toast.success(data.payload.data, {
+        duration: 1500,
+      });
     }
    })
   

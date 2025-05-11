@@ -16,7 +16,9 @@ function AdminProductTile({
     e.preventDefault();
     dispatch(deleteProduct({ id: product._id })).then((data) => {
       if (data.paylaod.success) {
-        toast.error(data.payload.message);
+        toast.error(data.payload.message, {
+          duration: 1500,
+        });
         dispatch(fetchAllProducts());
       }
     });

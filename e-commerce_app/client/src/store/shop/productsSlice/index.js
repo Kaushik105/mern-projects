@@ -3,16 +3,16 @@ import axios from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 const initialState = {
-  isLoading: false,
+  isLoading: true,
   productList: [],
   productDetails: null,
 };
 
+
 export const getFilteredProducts = createAsyncThunk(
-  "shopProducts/fetchallproducts",
+  "shopProducts/getFilteredProducts",
   async ({ filterParams, sortParams }) => {
     const query = new URLSearchParams({ ...filterParams, sortBy: sortParams });
-
     const response = await axios.get(
       `http://localhost:3000/api/shop/products/get?${query}`,
       {
@@ -50,9 +50,9 @@ const ShopProductsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getFilteredProducts.pending, (state) => {
-        state.isLoading = true;
+        state.isLoading = false;
       })
-      .addCase(getFilteredProducts.fulfilled, (state, action) => {
+      .addCase(getFilteredProducts.fulfilled, (state, action) => {        
         state.isLoading = false;
         state.productList = action.payload.data;
       })
@@ -61,7 +61,7 @@ const ShopProductsSlice = createSlice({
         state.productList = [];
       })
       .addCase(getProductDetails.pending, (state) => {
-        state.isLoading = true;
+        state.isLoading = false;
       })
       .addCase(getProductDetails.fulfilled, (state, action) => {
         state.isLoading = false;
