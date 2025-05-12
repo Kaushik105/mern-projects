@@ -8,7 +8,6 @@ const initialState = {
   productDetails: null,
 };
 
-
 export const getFilteredProducts = createAsyncThunk(
   "shopProducts/getFilteredProducts",
   async ({ filterParams, sortParams }) => {
@@ -52,7 +51,7 @@ const ShopProductsSlice = createSlice({
       .addCase(getFilteredProducts.pending, (state) => {
         state.isLoading = false;
       })
-      .addCase(getFilteredProducts.fulfilled, (state, action) => {        
+      .addCase(getFilteredProducts.fulfilled, (state, action) => {
         state.isLoading = false;
         state.productList = action.payload.data;
       })

@@ -4,6 +4,7 @@ const addressSchema = new mongoose.Schema({
 	user: {
 		type: mongoose.Types.Schema.ObjectId,
 		ref: "User",
+		required: true
 	},
 	address: {
 		type: String,
@@ -23,7 +24,6 @@ const addressSchema = new mongoose.Schema({
 	},
 	notes: {
 		type: String,
-		required: true,
 	},
 });
 

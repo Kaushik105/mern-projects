@@ -36,21 +36,22 @@ function createSearchParamHelper(filters) {
   return queryParams.join("&");
 }
 
-function ShoppingListing() {  
+function ShoppingListing() {
+  
   const { productList, productDetails, isLoading } = useSelector(
     (state) => state.shopProducts
   );
   const [sort, setSort] = useState("price-lowtohigh");
-  const [filters, setFilters] = useState();
+  const [filters, setFilters] = useState(JSON.parse(sessionStorage.getItem("filters")));
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
   const [openProductDialog, setOpenProductDialog] = useState(false);
-
+  
   function handleSort(value) {
     setSort(value);
   }
-
+  
   function handleFilter(sectionId, optionId) {
     let cpyFilters = { ...filters };
     const indexOfSectionId = Object.keys(cpyFilters).indexOf(sectionId);
@@ -68,7 +69,7 @@ function ShoppingListing() {
     }
     setFilters(cpyFilters);
   }
-
+  
   function handleGetProductDetails(productId) {
     if (productDetails && productDetails._id == productId) {
       setOpenProductDialog(true);
@@ -80,7 +81,7 @@ function ShoppingListing() {
       });
     }
   }
-
+  
   function handleAddtoCart(getCurrentProductId) {
     dispatch(
       createCart({
@@ -96,14 +97,12 @@ function ShoppingListing() {
       }
     });
   }
-
-
+  
   useEffect(() => {
     setSort("price-lowtohigh");
     setFilters(JSON.parse(sessionStorage.getItem("filters")));
     dispatch(getFilteredProducts(filters));
-
-  }, []);
+  },[]);
 
   useEffect(() => {
     if (filters && Object.keys(filters).length > 0) {
@@ -117,10 +116,9 @@ function ShoppingListing() {
     if (filters !== null && sort !== null) {
       dispatch(
         getFilteredProducts({ filterParams: filters, sortParams: sort })
-      )
+      );
     }
   }, [dispatch, sort, filters]);
-
 
   return (
     <>
@@ -164,7 +162,7 @@ function ShoppingListing() {
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
-            {(isLoading && productList !== null ) ? (
+            {isLoading && productList !== null ? (
               <div className="flex flex-col space-y-3">
                 <Skeleton className="h-[125px] w-[250px] rounded-xl bg-gray-700" />
                 <div className="space-y-2">

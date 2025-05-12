@@ -18,11 +18,17 @@ import {
   ShovelIcon,
   WatchIcon,
 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { useDispatch, useSelector } from "react-redux";
 import ShoppingProductTile from "@/components/shopping-view/ProductTile";
-import { getFilteredProducts } from "@/store/shop/productsSlice";
-import { loginFormControls } from "@/config";
+import {
+  getFilteredProducts,
+  getProductDetails,
+} from "@/store/shop/productsSlice";
+import { useNavigate } from "react-router-dom";
+import { createCart } from "@/store/shop/cartSlice";
+import { toast } from "sonner";
+import ProductDetailsDialog from "@/components/shopping-view/ProductDetails";
 
 const categories = [
   { id: "men", label: "Men", icon: ShirtIcon },
@@ -44,20 +50,64 @@ const brands = [
 function ShoppingHome() {
   const dispatch = useDispatch();
   const slides = [slide1, slide2, slide3];
-  const { productList } = useSelector((state) => state.shopProducts);
+  const { productList, productDetails } = useSelector(
+    (state) => state.shopProducts
+  );
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [openProductDialog, setOpenProductDialog] = useState(false);
+  const {user} = useSelector(state => state.auth)
+
+  const navigate = useNavigate();
+
+  function handleNavigateToListing(filterItem, sectionId) {
+    sessionStorage.removeItem("filters");
+    let filters = {
+      [sectionId]: [filterItem],
+    };
+    sessionStorage.setItem("filters", JSON.stringify(filters));
+    navigate("/shop/listing");
+  }
+
+  function handleGetProductDetails(productId) {
+    if (productDetails && productDetails._id == productId) {
+      setOpenProductDialog(true);
+    } else {
+      dispatch(getProductDetails(productId)).then((data) => {
+        if (data.payload.success) {
+          setOpenProductDialog(true);
+        }
+      });
+    }
+  }
+
+  function handleAddtoCart(getCurrentProductId) {
+    dispatch(
+      createCart({
+        userId: user._id,
+        productId: getCurrentProductId,
+        quantity: 1,
+      })
+    ).then((data) => {
+      if (data.payload.success) {
+        toast.success("Product added to cart", {
+          duration: 1500,
+        });
+      }
+    });
+  }
 
   useEffect(() => {
     dispatch(getFilteredProducts({ filter: {}, sortBy: "price-lowtohigh" }));
-    setInterval(() => {
+    const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1 + slides.length) % slides.length);
-    }, 5000);
-  }, []);
+    }, 2000);
 
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="relative w-full h-[600px] overflow-hidden">
+      <div className="relative w-full h-[500px] overflow-hidden">
         {slides.map((slide, index) => (
           <img
             src={slide}
@@ -101,6 +151,9 @@ function ShoppingHome() {
             <Card
               key={categoryItem.id}
               className={"shadow hover:shadow-lg p-4 h-38"}
+              onClick={() =>
+                handleNavigateToListing(categoryItem.id, "category")
+              }
             >
               <CardContent
                 className={"flex items-center justify-center flex-col gap-6"}
@@ -118,19 +171,18 @@ function ShoppingHome() {
         <div className="text-center mb-12">
           <h1 className="text-3xl font-bold">Shop By Brand</h1>
         </div>
-        <div className="grid sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6 px-6 my-6 lg:grid-cols-5">
-          {brands.map((categoryItem, index) => (
+        <div className="grid sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6 px-6 my-6 ">
+          {brands.map((brandItem, index) => (
             <Card
-              key={categoryItem.id}
+              key={brandItem.id}
               className={"shadow hover:shadow-lg p-4 h-38"}
+              onClick={() => handleNavigateToListing(brandItem.id, "brand")}
             >
               <CardContent
                 className={"flex items-center justify-center flex-col gap-6"}
               >
-                <categoryItem.icon className="w-14 h-14" />
-                <span className="text-lg font-semibold">
-                  {categoryItem.label}
-                </span>
+                <brandItem.icon className="w-14 h-14" />
+                <span className="text-lg font-semibold">{brandItem.label}</span>
               </CardContent>
             </Card>
           ))}
@@ -144,13 +196,22 @@ function ShoppingHome() {
           {productList && productList.length > 0
             ? productList.map((producItem) => (
                 <ShoppingProductTile
-                  key={producItem.productId}
+                  key={producItem._id}
                   product={producItem}
+                  handleGetProductDetails={handleGetProductDetails}
+                  handleAddtoCart={handleAddtoCart}
                 />
               ))
             : null}
         </div>
       </section>
+      .
+      <ProductDetailsDialog
+        setOpen={setOpenProductDialog}
+        open={openProductDialog}
+        productDetails={productDetails}
+        handleAddtoCart={handleAddtoCart}
+      />
     </div>
   );
 }

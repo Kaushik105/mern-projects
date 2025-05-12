@@ -19,15 +19,22 @@ import { logoutUser } from "@/store/auth-slice";
 import CartWrapper from "./cartWrapper";
 import { fetchCartItems } from "@/store/shop/cartSlice";
 
-
-
 function MenuItems() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  
-  function handleNavigate(getCurrentMenuItem) {
-    navigate(getCurrentMenuItem.path)
-    
+
+  function handleNavigateToListing(getCurrentMenuItem) {
+    if (
+      !(getCurrentMenuItem.id == "products" || getCurrentMenuItem.id == "home")
+    ) {
+      sessionStorage.removeItem("filters");
+      const filters = {
+        category: [getCurrentMenuItem.id],
+      };
+      sessionStorage.setItem("filters", JSON.stringify(filters));
+    }
+
+    navigate(getCurrentMenuItem.path);
   }
 
   return (
@@ -36,7 +43,9 @@ function MenuItems() {
         <Label
           key={menuItem.id}
           className="text-sm font-medium cursor-pointer"
-          onClick={()=>{handleNavigate(menuItem)}}
+          onClick={() => {
+            handleNavigateToListing(menuItem);
+          }}
         >
           {menuItem.label}
         </Label>
@@ -49,18 +58,16 @@ function HeaderRightcontent() {
   const [openCartSheet, setOpenCartSheet] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const{isAuthenticated, user} = useSelector(state => state.auth)
-  const {cartItems} = useSelector(state => state.shopCart)
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
+  const { cartItems } = useSelector((state) => state.shopCart);
 
-  function handleLogout(){
-    dispatch(logoutUser())
+  function handleLogout() {
+    dispatch(logoutUser());
   }
 
   useEffect(() => {
-    dispatch(fetchCartItems(user._id))
-  
-  }, [dispatch])
-  
+    dispatch(fetchCartItems(user._id));
+  }, [dispatch]);
 
   return (
     <div className="flex lg:item-center lg:flex-row flex-col gap-4">
@@ -75,7 +82,7 @@ function HeaderRightcontent() {
         >
           <ShoppingCart className="w-6 h-6" />
         </Button>
-        <CartWrapper cartItems={cartItems}/>
+        <CartWrapper cartItems={cartItems} />
       </Sheet>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -129,7 +136,7 @@ function ShoppingHeader() {
             className={"w-full max-w-xs p-5  pt-7 lg:hidden block"}
           >
             <MenuItems />
-            <HeaderRightcontent/>
+            <HeaderRightcontent />
           </SheetContent>
         </Sheet>
         <div className="hidden lg:block">

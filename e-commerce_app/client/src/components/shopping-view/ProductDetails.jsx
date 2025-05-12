@@ -13,7 +13,10 @@ function ProductDetailsDialog({
 }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-w-[90vw] grid grid-cols-2 h-[450px] sm:max-w-[80vw] lg:max-w-[70vw] p-6 gap-8">
+      <DialogContent
+        aria-describedby={undefined}
+        className="max-w-[90vw] grid grid-cols-2 h-[450px] sm:max-w-[80vw] lg:max-w-[70vw] p-6 gap-8"
+      >
         <div className="relative rounded-lg overflow-hidden">
           <img
             src={productDetails?.image}
@@ -26,9 +29,7 @@ function ProductDetailsDialog({
         <div className="flex flex-col gap-3">
           <span>
             <DialogTitle>
-              <h1 className="text-3xl font-semibold">
-                {productDetails?.title}
-              </h1>
+              <p className="text-3xl font-semibold">{productDetails?.title}</p>
             </DialogTitle>
             <p className="text-muted-foreground text-lg">
               {productDetails?.description}
