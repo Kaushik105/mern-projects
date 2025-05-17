@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   addAddress,
   deleteAddress,
+  editAddress,
   fetchAddress,
 } from "@/store/shop/addressSlice";
 import AddressCard from "./AddressCard";
@@ -20,7 +21,7 @@ const initialFormData = {
 
 function Address() {
   const { addressList } = useSelector((state) => state.shopAddress);
-
+  const [currentEditedId, setCurrentEditedId] = useState(null);
   const [formData, setFormData] = useState(initialFormData);
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
@@ -29,6 +30,34 @@ function Address() {
     dispatch(deleteAddress({ userId: user._id, addressId })).then((data) => {
       if (data.payload?.success) {
         toast.success("address deleted sucessfully");
+        dispatch(fetchAddress({ userId: user._id }));
+      }
+    });
+  }
+
+  function handleAddressEdit(currentEditedId, editFormData) {
+    setCurrentEditedId(currentEditedId);
+    setFormData({
+      address: editFormData.address,
+      city: editFormData.city,
+      phone: editFormData.phone,
+      pincode: editFormData.pincode,
+      notes: editFormData.notes,
+    });
+  }
+
+  function handleAddressFormEdit(e) {
+    e.preventDefault();
+    dispatch(
+      editAddress({
+        addressData: formData,
+        userId: user._id,
+        addressId: currentEditedId,
+      })
+    ).then((data) => {
+      if (data?.payload?.success) {
+        setFormData(initialFormData);
+        setCurrentEditedId(null);
         dispatch(fetchAddress({ userId: user._id }));
       }
     });
@@ -46,6 +75,8 @@ function Address() {
           console.log(data)
         );
         setFormData(initialFormData);
+      } else {
+        toast.error(data?.payload?.message);
       }
     });
   }
@@ -70,6 +101,7 @@ function Address() {
                 <AddressCard
                   addressCardItem={item}
                   handleAddressDelete={handleAddressDelete}
+                  handleAddressEdit={handleAddressEdit}
                   key={item._id}
                 />
               ))
@@ -80,8 +112,10 @@ function Address() {
         formControls={addressFormControls}
         formData={formData}
         setFormData={setFormData}
-        onSubmit={handleAddressFormSubmit}
-        buttonText={"Add"}
+        onSubmit={
+          currentEditedId ? handleAddressFormEdit : handleAddressFormSubmit
+        }
+        buttonText={currentEditedId ? "Edit" : "Add"}
         isBtnDisabled={!isFormValid()}
       />
     </div>

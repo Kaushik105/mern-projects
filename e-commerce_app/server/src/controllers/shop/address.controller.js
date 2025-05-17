@@ -1,6 +1,6 @@
-import {asyncHandler} from "../../utils/asyncHandler.js";
-import {ApiResponse} from "../../utils/ApiResponse.js";
-import {ApiError} from "../../utils/ApiError.js";
+import { asyncHandler } from "../../utils/asyncHandler.js";
+import { ApiResponse } from "../../utils/ApiResponse.js";
+import { ApiError } from "../../utils/ApiError.js";
 import { User } from "../../models/User.model.js";
 import { Address } from "../../models/address.model.js";
 
@@ -17,6 +17,12 @@ const addAddress = asyncHandler(async (req, res) => {
 		return res.json(new ApiError(500, "user not found"));
 	}
 
+	const numberOfAddresses = await Address.find({ user: userId });
+
+	if (numberOfAddresses && numberOfAddresses.length >= 3) {
+		return res.json(new ApiError(400, "Maximum address count reached"));
+	}
+
 	const newAddress = new Address({
 		user: userId,
 		address,
@@ -31,9 +37,10 @@ const addAddress = asyncHandler(async (req, res) => {
 	if (!newAddress) {
 		return res.json(new ApiError(500, "address creation failed"));
 	}
-	
 
-	return res.json(new ApiResponse(200, newAddress, "Address created successfully"));
+	return res.json(
+		new ApiResponse(200, newAddress, "Address created successfully")
+	);
 });
 const fetchAddress = asyncHandler(async (req, res) => {
 	const { userId } = req.params;

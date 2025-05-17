@@ -1,12 +1,19 @@
-import React from 'react'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../ui/card'
-import { useSelector } from 'react-redux'
-import { Label } from '../ui/label'
-import { Button } from '../ui/button';
+import React from "react";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import { useSelector } from "react-redux";
+import { Label } from "../ui/label";
+import { Button } from "../ui/button";
 
 function AddressCard({
   addressCardItem,
   handleAddressDelete,
+  handleAddressEdit,
 }) {
   return (
     <Card className={"p-2 gap-0 min-w-50 h-48 my-2.5 justify-between"}>
@@ -26,7 +33,13 @@ function AddressCard({
         </Label>
       </CardContent>
       <CardFooter className={"flex justify-between p-2"}>
-        <Button>Edit</Button>
+        <Button
+          onClick={() => {
+            handleAddressEdit(addressCardItem._id, addressCardItem);
+          }}
+        >
+          Edit
+        </Button>
         <Button
           onClick={() => {
             handleAddressDelete(addressCardItem._id);
@@ -39,4 +52,4 @@ function AddressCard({
   );
 }
 
-export default AddressCard
+export default AddressCard;
