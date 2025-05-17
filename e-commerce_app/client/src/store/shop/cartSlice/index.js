@@ -70,7 +70,7 @@ export const deleteCart = createAsyncThunk(
 );
 
 const shoppingCartSlice = createSlice({
-  name: "shoppingCartSlice",
+  name: "shoppingCart",
   initialState,
   reducers: () => {},
   extraReducers: (builder) => {

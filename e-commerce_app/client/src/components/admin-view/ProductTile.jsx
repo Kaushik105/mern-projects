@@ -29,7 +29,7 @@ function AdminProductTile({
       <div>
         <img
           src={product.image}
-          alt={product.image}
+          alt={product.title}
           className="object-cover w-full h-[180px] rounded-t-lg"
         />
       </div>
