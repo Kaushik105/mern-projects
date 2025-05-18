@@ -22,8 +22,6 @@ function AdminOrderDetails() {
 
   function handleOrderDeatilSubmit(e){
     e.preventDefault()
-    console.log("submitted");
-    
   }
 
 

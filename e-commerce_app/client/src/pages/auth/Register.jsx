@@ -20,7 +20,6 @@ function Register() {
   const onSubmit = (e) => { 
     e.preventDefault()
     dispatch(registerUser(formData)).then((user) => { 
-      console.log(user);
       if (user.payload?.success) {
         navigate("/auth/login")
         toast.success(user.payload?.message, {

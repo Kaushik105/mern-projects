@@ -19,7 +19,7 @@ const initialFormData = {
   notes: "",
 };
 
-function Address() {
+function Address({ setCurrentSelectedAddress }) {
   const { addressList } = useSelector((state) => state.shopAddress);
   const [currentEditedId, setCurrentEditedId] = useState(null);
   const [formData, setFormData] = useState(initialFormData);
@@ -70,9 +70,7 @@ function Address() {
     ).then((data) => {
       if (data.payload?.success) {
         toast.success("New address added");
-        console.log("successful");
-        dispatch(fetchAddress({ userId: user._id })).then((data) =>
-          console.log(data)
+        dispatch(fetchAddress({ userId: user._id })).then((data) =>{}
         );
         setFormData(initialFormData);
       } else {
@@ -103,6 +101,7 @@ function Address() {
                   handleAddressDelete={handleAddressDelete}
                   handleAddressEdit={handleAddressEdit}
                   key={item._id}
+                  setCurrentSelectedAddress={setCurrentSelectedAddress}
                 />
               ))
             : null}

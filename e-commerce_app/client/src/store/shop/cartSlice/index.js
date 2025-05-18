@@ -5,6 +5,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 const initialState = {
   cartItems: [],
   isLoading: false,
+  cartId: null
 };
 
 export const createCart = createAsyncThunk(
@@ -81,6 +82,7 @@ const shoppingCartSlice = createSlice({
       .addCase(createCart.fulfilled, (state, action) => {
         state.isLoading = false;
         state.cartItems = action.payload.data.items;
+        state.cartId = action.payload.data._id
       })
       .addCase(createCart.rejected, (state) => {
         state.isLoading = false;
@@ -92,6 +94,7 @@ const shoppingCartSlice = createSlice({
       .addCase(fetchCartItems.fulfilled, (state, action) => {
         state.isLoading = false;
         state.cartItems = action.payload.data.items;
+        state.cartId = action.payload.data._id;
       })
       .addCase(fetchCartItems.rejected, (state) => {
         state.isLoading = false;
@@ -103,6 +106,7 @@ const shoppingCartSlice = createSlice({
       .addCase(updateCart.fulfilled, (state, action) => {
         state.isLoading = false;
         state.cartItems = action.payload.data.items;
+        state.cartId = action.payload.data._id;
       })
       .addCase(updateCart.rejected, (state) => {
         state.isLoading = false;
@@ -114,6 +118,7 @@ const shoppingCartSlice = createSlice({
       .addCase(deleteCart.fulfilled, (state, action) => {
         state.isLoading = false;
         state.cartItems = action.payload.data.items;
+        state.cartId = action.payload.data._id;
       })
       .addCase(deleteCart.rejected, (state) => {
         state.isLoading = false;

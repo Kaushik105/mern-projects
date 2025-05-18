@@ -3,26 +3,39 @@ import mongoose from "mongoose";
 const orderSchema = new mongoose.Schema(
 	{
 		userId: {
-			type: mongoose.Types.Schema.ObjectId,
+			type: mongoose.Schema.Types.ObjectId,
 			ref: "User",
 			required: true,
 		},
 		cartId: {
-			type: mongoose.Types.Schema.ObjectId,
+			type: mongoose.Schema.Types.ObjectId,
 			ref: "Cart",
 			required: true,
 		},
-		cartItem: [
+		addressInfo: {
+			addressId: String,
+			address: String,
+			city: String,
+			pincode: String,
+			phone: String,
+			notes: String,
+		},
+		cartItems: [
 			{
-				type: mongoose.Types.Schema.ObjectId,
-				ref: "Product",
+				productId: String,
+				title: String,
+				image: String,
+				price: String,
+				quantity: Number,
 			},
 		],
-		addressInfo: {
-			type: mongoose.Types.Schema.ObjectId,
-			ref: "Address",
-		},
 		paymentMethod: {
+			type: String,
+		},
+		orderStatus: {
+			type: String,
+		},
+		paymentStatus: {
 			type: String,
 		},
 		totalAmount: {
