@@ -82,7 +82,10 @@ function HeaderRightcontent() {
         >
           <ShoppingCart className="w-6 h-6" />
         </Button>
-        <CartWrapper cartItems={cartItems} />
+        <CartWrapper
+          setOpenCartSheet={setOpenCartSheet}
+          cartItems={cartItems}
+        />
       </Sheet>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

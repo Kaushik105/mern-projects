@@ -1,13 +1,20 @@
-import { Button } from '@/components/ui/button'
+import ShoppingOrderDetailsView from "@/components/shopping-view/ShoppingOrderDetails";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import React, { useState } from "react";
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import React, { useState } from 'react'
-import AdminOrderDetails from './AdminOrderDetails';
+function ShoppingOrdersView() {
+  const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
 
-function AdminOrdersView() {
-  const [openOrderDetailsDialog, setOpenOrderDetailsDialog] = useState(false)
   return (
     <div>
       <Card>
@@ -31,12 +38,14 @@ function AdminOrdersView() {
                 <TableCell>In Progress</TableCell>
                 <TableCell>$ 399</TableCell>
                 <TableCell>
-                  <Dialog open={openOrderDetailsDialog} onOpenChange={setOpenOrderDetailsDialog}>
-
-                  <Button 
-                  onClick={() => { setOpenOrderDetailsDialog(true) }}
-                  >view details</Button>
-                  <AdminOrderDetails/>
+                  <Dialog
+                    open={openDetailsDialog}
+                    onOpenChange={setOpenDetailsDialog}
+                  >
+                      <Button onClick={() => setOpenDetailsDialog(true)}>
+                        View Details
+                      </Button>
+                      <ShoppingOrderDetailsView/>
                   </Dialog>
                 </TableCell>
               </TableRow>
@@ -44,9 +53,8 @@ function AdminOrdersView() {
           </Table>
         </CardContent>
       </Card>
-
     </div>
   );
 }
 
-export default AdminOrdersView;
+export default ShoppingOrdersView;

@@ -2,6 +2,7 @@ import React from "react";
 import account from "../../assets/account.avif";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Address from "@/components/shopping-view/Address";
+import ShoppingOrdersView from "./Orders";
 
 function ShoppingAccount() {
   return (
@@ -22,7 +23,9 @@ function ShoppingAccount() {
             <TabsTrigger value="Orders">Orders</TabsTrigger>
             <TabsTrigger value="Addresses">Addresses</TabsTrigger>
           </TabsList>
-          <TabsContent value="Orders">Orders</TabsContent>
+          <TabsContent value="Orders">
+            <ShoppingOrdersView />
+          </TabsContent>
           <TabsContent value="Addresses" className={"w-full"}>
             <Address />
           </TabsContent>

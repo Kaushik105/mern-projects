@@ -103,7 +103,7 @@ function ShoppingHome() {
     }, 2000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [setCurrentSlide]);
 
   return (
     <div className="flex flex-col min-h-screen">

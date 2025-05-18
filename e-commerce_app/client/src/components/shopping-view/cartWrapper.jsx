@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import { SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
 import CartItemsContent from "./cartItemsContent";
 import { Button } from "../ui/button";
+import { useNavigate } from "react-router-dom";
 
-function CartWrapper({ cartItems }) {
+function CartWrapper({ cartItems, setOpenCartSheet }) {
   const [cartTotal, setcartTotal] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
-
     if (cartItems && cartItems.length > 0) {
       let total = cartItems?.reduce((acc, item) => {
         let price = item?.salesPrice > 0 ? item.salesPrice : item.price;
@@ -37,7 +38,12 @@ function CartWrapper({ cartItems }) {
             <p className="font-bold">Total</p>
             <p className="font-bold">{cartTotal}</p>
           </div>
-          <Button>
+          <Button
+            onClick={() => {
+              navigate("/shop/checkout");
+              setOpenCartSheet(false)
+            }}
+          >
             Checkout
           </Button>
         </div>

@@ -16,13 +16,13 @@ function AddressCard({
   handleAddressEdit,
 }) {
   return (
-    <Card className={"p-2 gap-0 min-w-50 h-48 my-2.5 justify-between"}>
+    <Card className={"p-2 gap-0 min-w-50 min-h-48 my-2.5 justify-between overflow-hidden"}>
       <CardHeader className={"p-2 gap-0"}>
         <CardTitle>{addressCardItem?.notes}</CardTitle>
       </CardHeader>
       <CardContent className={"p-2 py-0"}>
         <Label className={"text-md font-normal"}>
-          {addressCardItem?.address}
+          {addressCardItem?.address}  
         </Label>
         <Label className={"text-md font-normal"}>{addressCardItem?.city}</Label>
         <Label className={"text-md font-normal"}>
