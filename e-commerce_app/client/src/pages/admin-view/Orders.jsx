@@ -1,13 +1,23 @@
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog } from '@/components/ui/dialog';
+import { Dialog } from "@/components/ui/dialog";
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import React, { useState } from 'react'
-import AdminOrderDetails from './AdminOrderDetails';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import React, { useEffect, useState } from "react";
+import AdminOrderDetails from "./AdminOrderDetails";
+
 
 function AdminOrdersView() {
-  const [openOrderDetailsDialog, setOpenOrderDetailsDialog] = useState(false)
+  const [openOrderDetailsDialog, setOpenOrderDetailsDialog] = useState(false);
+
+
   return (
     <div>
       <Card>
@@ -31,12 +41,18 @@ function AdminOrdersView() {
                 <TableCell>In Progress</TableCell>
                 <TableCell>$ 399</TableCell>
                 <TableCell>
-                  <Dialog open={openOrderDetailsDialog} onOpenChange={setOpenOrderDetailsDialog}>
-
-                  <Button 
-                  onClick={() => { setOpenOrderDetailsDialog(true) }}
-                  >view details</Button>
-                  <AdminOrderDetails/>
+                  <Dialog
+                    open={openOrderDetailsDialog}
+                    onOpenChange={setOpenOrderDetailsDialog}
+                  >
+                    <Button
+                      onClick={() => {
+                        setOpenOrderDetailsDialog(true);
+                      }}
+                    >
+                      view details
+                    </Button>
+                    <AdminOrderDetails />
                   </Dialog>
                 </TableCell>
               </TableRow>
@@ -44,7 +60,6 @@ function AdminOrdersView() {
           </Table>
         </CardContent>
       </Card>
-
     </div>
   );
 }

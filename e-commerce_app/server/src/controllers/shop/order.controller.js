@@ -20,8 +20,6 @@ const createOrder = asyncHandler(async (req, res) => {
 		paymentId,
 		payerId,
 	} = req.body;
-	
-
 
 	const createPaymentJson = {
 		intent: "sale",
@@ -91,7 +89,7 @@ const createOrder = asyncHandler(async (req, res) => {
 const capturePayment = asyncHandler(async (req, res) => {
 	const { paymentId, payerId, orderId } = req.body;
 	let order = await Order.findById(orderId);
-	 
+
 	if (!order) {
 		return res.json(new ApiError(500, "order not found"));
 	}
@@ -101,13 +99,35 @@ const capturePayment = asyncHandler(async (req, res) => {
 	order.payerId = payerId;
 	order.orderStatus = "confirmed";
 
-    const getCartId = order.cartId;
-    await Cart.findByIdAndDelete(getCartId)
+	const getCartId = order.cartId;
+	await Cart.findByIdAndDelete(getCartId);
 
 	await order.save();
 
-    return res.status(200)
-    .json(new ApiResponse(200, order, "order confirmed"))
+	return res.status(200).json(new ApiResponse(200, order, "order confirmed"));
 });
 
-export { createOrder, capturePayment };
+const getAllOrdersByUser = asyncHandler(async (req, res) => {
+	const { userId } = req.params;
+
+	const orders = await Order.find({ userId });
+
+	if (!orders.length) {
+		return res.json(new ApiError(500, "no orders found"));
+	}
+
+	return res.json(new ApiResponse(200, orders, "orders fetched"));
+});
+const getOrderDetails = asyncHandler(async (req, res) => {
+	const { orderId } = req.params;
+
+	const order = await Order.findById(orderId);
+
+	if (!order) {
+		return res.json(new ApiError(500, "no orders found"));
+	}
+
+	return res.json(new ApiResponse(200, order, "order details fetched"));
+});
+
+export { createOrder, capturePayment, getAllOrdersByUser, getOrderDetails };

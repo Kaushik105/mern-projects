@@ -5,6 +5,7 @@ import CartItemsContent from "@/components/shopping-view/cartItemsContent";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
 import { createNewOrder } from "@/store/shop/orderSlice";
+import { toast } from "sonner";
 
 function ShoppingCheckout() {
   const { cartItems, cartId } = useSelector((state) => state.shopCart);
@@ -16,6 +17,14 @@ function ShoppingCheckout() {
   const [isPaymentStart, setIsPaymentStart] = useState(false);
 
   function handleInitiatePaypalPayment() {
+    if (currentSelectedAddress == null) {
+      toast.error("please select address to proceed");
+    }
+if (cartItems.length === 0) {
+  toast.error("Your cart is empty",{
+    duration: 900
+  })
+}
     const orderData = {
       userId: user._id,
       cartId,
@@ -47,10 +56,10 @@ function ShoppingCheckout() {
       payerId: "",
     };
     console.log(orderData, "checkout page");
-    
+
     dispatch(createNewOrder(orderData)).then((data) => {
       console.log(data, "create new order");
-      
+
       if (data?.payload?.success) {
         setIsPaymentStart(true);
       } else {
@@ -58,8 +67,6 @@ function ShoppingCheckout() {
       }
     });
   }
-
-
 
   useEffect(() => {
     if (cartItems && cartItems.length > 0) {
@@ -74,7 +81,7 @@ function ShoppingCheckout() {
   }, [cartItems]);
 
   if (approvalURL) {
-    window.location.href = approvalURL
+    window.location.href = approvalURL;
   }
 
   return (
