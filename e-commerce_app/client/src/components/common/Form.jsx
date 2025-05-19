@@ -60,7 +60,7 @@ function CommonForm({
             <SelectContent>
               {getControlItem.options && getControlItem.options.length > 0
                 ? getControlItem.options.map((optionItem) => (
-                    <SelectItem key={optionItem.id} value={optionItem.id}>
+                    <SelectItem key={optionItem.id} value={optionItem.label}>
                       {optionItem.label}
                     </SelectItem>
                   ))

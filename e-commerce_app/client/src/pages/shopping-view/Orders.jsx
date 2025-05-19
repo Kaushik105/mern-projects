@@ -23,15 +23,20 @@ function ShoppingOrdersView() {
   const { user } = useSelector((state) => state.auth);
   const { orderList, orderDetails } = useSelector((state) => state.shopOrder);
   const dispatch = useDispatch();
+
+
+  function handleGetOrderDetails(orderId) {
+    dispatch(getOrderDetails({ orderId }));
+    if (orderDetails) {
+      setOpenDetailsDialog(true);
+    }
+  }
+
   useEffect(() => {
     dispatch(getAllOrdersByUser({ userId: user._id }));
   }, [dispatch]);
-function handleGetOrderDetails(orderId){
-dispatch(getOrderDetails({orderId}))
-if (orderDetails) {
-  setOpenDetailsDialog(true);
-}
-}
+
+
 
 
   return (
@@ -66,12 +71,17 @@ if (orderDetails) {
                             dispatch(resetOrderDetails());
                           }}
                         >
-                          <Button onClick={() => {setOpenDetailsDialog(true)
-                            handleGetOrderDetails(orderItem._id)}
-                          }>
+                          <Button
+                            onClick={() => {
+                              setOpenDetailsDialog(true);
+                              handleGetOrderDetails(orderItem._id);
+                            }}
+                          >
                             View Details
                           </Button>
-                          <ShoppingOrderDetailsView orderDetails={orderDetails && orderDetails} />
+                          <ShoppingOrderDetailsView
+                            orderDetails={orderDetails && orderDetails}
+                          />
                         </Dialog>
                       </TableCell>
                     </TableRow>
