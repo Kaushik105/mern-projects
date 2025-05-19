@@ -1,6 +1,11 @@
 import { HouseIcon, LogOut, Menu, ShoppingCart, User } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { shoppingViewHeaderMenuItems } from "@/config";
@@ -22,18 +27,24 @@ import { fetchCartItems } from "@/store/shop/cartSlice";
 function MenuItems() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   function handleNavigateToListing(getCurrentMenuItem) {
+    let filters;
     if (
       !(getCurrentMenuItem.id == "products" || getCurrentMenuItem.id == "home")
     ) {
-      sessionStorage.removeItem("filters");
-      const filters = {
+      filters = {
         category: [getCurrentMenuItem.id],
       };
       sessionStorage.setItem("filters", JSON.stringify(filters));
+      if (location.pathname.includes("listing") && filters ) {
+        setSearchParams(
+          new URLSearchParams(`?category=${getCurrentMenuItem.id}`)
+        );
+      }
     }
-
     navigate(getCurrentMenuItem.path);
   }
 

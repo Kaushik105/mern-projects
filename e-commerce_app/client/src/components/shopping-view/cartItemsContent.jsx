@@ -8,27 +8,51 @@ import { deleteCart, fetchCartItems, updateCart } from "@/store/shop/cartSlice";
 import { toast } from "sonner";
 
 function CartItemsContent({ cartItem }) {
-  const dispatch  = useDispatch()
-  const {user} = useSelector(state => state.auth)
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+  const { cartItems } = useSelector((state) => state.shopCart);
+  const { productList } = useSelector((state) => state.shopProducts);
 
-
-  function handleDeleteCartItem(productId){
-    dispatch(deleteCart({userId: user._id, productId})).then((data) => { if (data.payload.success) {
-      toast.error("Removed from cart", {
-        duration: 1500,
-      });
-    } })
-    
+  function handleDeleteCartItem(productId) {
+    dispatch(deleteCart({ userId: user._id, productId })).then((data) => {
+      if (data.payload.success) {
+        toast.error("Removed from cart", {
+          duration: 1500,
+        });
+      }
+    });
   }
 
-  function handleCartUpdateQuantity(productId, typeOfUpdation){    
+  function handleCartUpdateQuantity(productId, typeOfUpdation) {
+    if (typeOfUpdation === "plus") {
+      let getCartItems = cartItems || [];
+      let getTotalStock = productList.find(
+        (item) => item._id == productId
+      ).totalStock;
+
+      if (getCartItems.length) {
+        let indexOfCurrentItem = getCartItems.findIndex(
+          (item) => item.productId == productId
+        );
+
+        if (indexOfCurrentItem > -1) {
+          let getQuantity = getCartItems[indexOfCurrentItem].quantity;
+
+          if (getQuantity + 1 > getTotalStock) {
+            toast.error(`only ${getTotalStock} items can be added`);
+            return;
+          }
+        }
+      }
+    }
+
     if (typeOfUpdation === "minus") {
-      dispatch(updateCart({userId: user._id, productId, quantity: -1}))
-    }else{
-      dispatch(updateCart({ userId: user._id, productId, quantity: 1 }))
+      dispatch(updateCart({ userId: user._id, productId, quantity: -1 }));
+    } else {
+      dispatch(updateCart({ userId: user._id, productId, quantity: 1 }));
     }
   }
-  const [value, setvalue] = useState(0)
+  const [value, setvalue] = useState(0);
   return (
     <>
       {cartItem ? (

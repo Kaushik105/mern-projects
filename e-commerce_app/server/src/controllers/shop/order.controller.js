@@ -4,6 +4,7 @@ import { asyncHandler } from "../../utils/asyncHandler.js";
 import { Order } from "../../models/order.model.js";
 import paypal from "../../helpers/paypal.js";
 import { Cart } from "../../models/cart.model.js";
+import { Product } from "../../models/product.model.js";
 
 const createOrder = asyncHandler(async (req, res) => {
 	const {
@@ -97,7 +98,19 @@ const capturePayment = asyncHandler(async (req, res) => {
 	order.paymentStatus = "paid";
 	order.paymentId = paymentId;
 	order.payerId = payerId;
-	order.orderStatus = "confirmed";
+	order.orderStatus = "In Process";
+
+	for (const item of order.cartItems) {
+		let product = await Product.findById(item.productId);
+
+		if (!product) {
+			return res.json(new ApiError(500, "product not found"));
+		}
+
+		product.totalStock -= item.quantity;
+
+		await product.save();
+	}
 
 	const getCartId = order.cartId;
 	await Cart.findByIdAndDelete(getCartId);

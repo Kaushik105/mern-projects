@@ -56,6 +56,7 @@ function ShoppingHome() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [openProductDialog, setOpenProductDialog] = useState(false);
   const {user} = useSelector(state => state.auth)
+  const {cartItems}  = useSelector(state => state.shopCart)
 
   const navigate = useNavigate();
 
@@ -80,7 +81,22 @@ function ShoppingHome() {
     }
   }
 
-  function handleAddtoCart(getCurrentProductId) {
+  function handleAddtoCart(getCurrentProductId, getTotalStock) {
+    let getCartItems = cartItems || [];
+        if (getCartItems.length) {
+          let indexOfCurrentItem = getCartItems.findIndex(
+            (item) => item.productId == getCurrentProductId
+          );
+    
+          if (indexOfCurrentItem > -1) {
+            let getQuantity = getCartItems[indexOfCurrentItem].quantity;
+    
+            if (getQuantity + 1 > getTotalStock) {
+              toast.error(`only ${getTotalStock} items can be added`);
+              return;
+            }
+          }
+        }
     dispatch(
       createCart({
         userId: user._id,

@@ -53,7 +53,7 @@ const ShopProductsSlice = createSlice({
       })
       .addCase(getFilteredProducts.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.productList = action.payload.data;
+        state.productList = action.payload?.data;
       })
       .addCase(getFilteredProducts.rejected, (state) => {
         state.isLoading = false;
@@ -64,7 +64,7 @@ const ShopProductsSlice = createSlice({
       })
       .addCase(getProductDetails.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.productDetails = action.payload.data;
+        state.productDetails = action.payload?.data;
       })
       .addCase(getProductDetails.rejected, (state) => {
         state.isLoading = false;

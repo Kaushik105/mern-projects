@@ -17,7 +17,6 @@ import {
   getProductDetails,
 } from "@/store/shop/productsSlice";
 import { useSearchParams } from "react-router-dom";
-import ProductDetails from "@/components/shopping-view/ProductDetails";
 import ProductDetailsDialog from "@/components/shopping-view/ProductDetails";
 import { createCart } from "@/store/shop/cartSlice";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -37,21 +36,24 @@ function createSearchParamHelper(filters) {
 }
 
 function ShoppingListing() {
-  
   const { productList, productDetails, isLoading } = useSelector(
     (state) => state.shopProducts
   );
   const [sort, setSort] = useState("price-lowtohigh");
-  const [filters, setFilters] = useState(JSON.parse(sessionStorage.getItem("filters")));
+  const [filters, setFilters] = useState(
+    JSON.parse(sessionStorage.getItem("filters"))
+  );
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
   const [openProductDialog, setOpenProductDialog] = useState(false);
-  
+  const getSearchParams = searchParams.get("category");
+  const { cartItems } = useSelector((state) => state.shopCart);
+
   function handleSort(value) {
     setSort(value);
   }
-  
+
   function handleFilter(sectionId, optionId) {
     let cpyFilters = { ...filters };
     const indexOfSectionId = Object.keys(cpyFilters).indexOf(sectionId);
@@ -69,7 +71,7 @@ function ShoppingListing() {
     }
     setFilters(cpyFilters);
   }
-  
+
   function handleGetProductDetails(productId) {
     if (productDetails && productDetails._id == productId) {
       setOpenProductDialog(true);
@@ -81,8 +83,24 @@ function ShoppingListing() {
       });
     }
   }
-  
-  function handleAddtoCart(getCurrentProductId) {
+
+  function handleAddtoCart(getCurrentProductId, getTotalStock) {
+    let getCartItems = cartItems || [];
+    if (getCartItems.length) {
+      let indexOfCurrentItem = getCartItems.findIndex(
+        (item) => item.productId == getCurrentProductId
+      );
+
+      if (indexOfCurrentItem > -1) {
+        let getQuantity = getCartItems[indexOfCurrentItem].quantity;
+
+        if (getQuantity + 1 > getTotalStock) {
+          toast.error(`only ${getTotalStock} items can be added`);
+          return;
+        }
+      }
+    }
+
     dispatch(
       createCart({
         userId: user._id,
@@ -97,12 +115,12 @@ function ShoppingListing() {
       }
     });
   }
-  
+
   useEffect(() => {
     setSort("price-lowtohigh");
     setFilters(JSON.parse(sessionStorage.getItem("filters")));
     dispatch(getFilteredProducts(filters));
-  },[]);
+  }, [getSearchParams]);
 
   useEffect(() => {
     if (filters && Object.keys(filters).length > 0) {

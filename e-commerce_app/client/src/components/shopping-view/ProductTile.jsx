@@ -84,7 +84,7 @@ function ShoppingProductTile({product, handleGetProductDetails, handleAddtoCart}
           <Button
             className={"w-full"}
             onClick={() => {
-              handleAddtoCart(product?._id);
+              handleAddtoCart(product?._id, product?.totalStock);
             }}
           >
             Add to cart
