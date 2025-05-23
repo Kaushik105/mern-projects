@@ -1,9 +1,14 @@
-import React from "react";
-import { Dialog, DialogContent, DialogHeader } from "../ui/dialog";
+import React, { useEffect, useState } from "react";
+import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { StarIcon } from "lucide-react";
-import { DialogTitle } from "@radix-ui/react-dialog";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import StarRating from "../common/StarRating";
+import { useDispatch, useSelector } from "react-redux";
+import { addReview, getReviews } from "@/store/shop/reviewSlice";
+import { toast } from "sonner";
 
 function ProductDetailsDialog({
   productDetails,
@@ -11,8 +16,59 @@ function ProductDetailsDialog({
   setOpen,
   handleAddtoCart,
 }) {
+  const [reviewMsg, setReviewMsg] = useState("");
+  const [ratingValue, setratingValue] = useState(0);
+  const { user } = useSelector((state) => state.auth);
+  const { reviews } = useSelector((state) => state.shopReview);
+  const dispatch = useDispatch();
+
+  function handleRatingValue(value) {
+    setratingValue(value);
+  }
+
+  function handleReviewSubmit() {
+    if (reviewMsg.length > 3 && ratingValue) {
+      dispatch(
+        addReview({
+          reviewMessage: reviewMsg,
+          reviewValue: ratingValue,
+          username: user.username,
+          productId: productDetails._id,
+          userId: user._id,
+        })
+      ).then((data) => {
+        console.log(data);
+
+        if (data.payload?.success) {
+          console.log("success");
+
+          toast.success("Review submitted successfully");
+        } else {
+          console.log("not success");
+          toast.info(data?.payload?.message);
+        }
+        dispatch(getReviews(productDetails._id));
+        setReviewMsg("");
+        setratingValue(0);
+      });
+    }
+  }
+
+  useEffect(() => {
+    if (productDetails) {
+      dispatch(getReviews(productDetails?._id));
+    }
+  }, [productDetails]);
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={() => {
+        setOpen(false);
+        setReviewMsg("");
+        setratingValue(0);
+      }}
+    >
       <DialogContent
         aria-describedby={undefined}
         className="max-w-[90vw] grid grid-cols-2 h-[450px] sm:max-w-[80vw] lg:max-w-[70vw] p-6 gap-8"
@@ -48,14 +104,10 @@ function ProductDetailsDialog({
             )}
           </div>
           <div className="flex gap-0.5 items-center">
-            <StarIcon className="w-5 fill-primary" />
-            <StarIcon className="w-5 fill-primary" />
-            <StarIcon className="w-5 fill-primary" />
-            <StarIcon className="w-5 fill-primary" />
-            <StarIcon className="w-5 fill-primary" />
+            <StarRating rating={productDetails?.averageReview} />
             <span>
               <p className="text-muted-foreground ml-1 text-lg font-semibold">
-                (4.8)
+                ({productDetails?.averageReview})
               </p>
             </span>
           </div>
@@ -80,93 +132,50 @@ function ProductDetailsDialog({
           </div>
           <div className="max-h-[180px] overflow-auto">
             <h2 className="text-lg font-semibold overflow-y-auto">Reviews</h2>
-            <div className="flex gap-3 pt-1">
-              <Avatar className={"w-10 h-10 border mt-0.5"}>
-                <AvatarFallback
-                  className={"bg-black text-sm text-white font-semibold"}
-                >
-                  SM
-                </AvatarFallback>
-              </Avatar>
-              <div>
-                <div className="mt-0 font-semibold">{"Kaushik Chowdhury"}</div>
-                <div className="flex gap-1">
-                  <StarIcon className="w-5 fill-primary" />
-                  <StarIcon className="w-5 fill-primary" />
-                  <StarIcon className="w-5 fill-primary" />
-                  <StarIcon className="w-5 fill-primary" />
-                  <StarIcon className="w-5 fill-primary" />
-                </div>
-                <p className="text-muted-foreground text-sm font-normal">
-                  This is an awesom product
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-3 pt-1">
-              <Avatar className={"w-10 h-10 border mt-0.5"}>
-                <AvatarFallback
-                  className={"bg-black text-sm text-white font-semibold"}
-                >
-                  SM
-                </AvatarFallback>
-              </Avatar>
-              <div>
-                <div className="mt-0 font-semibold">{"Kaushik Chowdhury"}</div>
-                <div className="flex gap-1">
-                  <StarIcon className="w-5 fill-primary" />
-                  <StarIcon className="w-5 fill-primary" />
-                  <StarIcon className="w-5 fill-primary" />
-                  <StarIcon className="w-5 fill-primary" />
-                  <StarIcon className="w-5 fill-primary" />
-                </div>
-                <p className="text-muted-foreground text-sm font-normal">
-                  This is an awesom product
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-3 pt-1">
-              <Avatar className={"w-10 h-10 border mt-0.5"}>
-                <AvatarFallback
-                  className={"bg-black text-sm text-white font-semibold"}
-                >
-                  SM
-                </AvatarFallback>
-              </Avatar>
-              <div>
-                <div className="mt-0 font-semibold">{"Kaushik Chowdhury"}</div>
-                <div className="flex gap-1">
-                  <StarIcon className="w-5 fill-primary" />
-                  <StarIcon className="w-5 fill-primary" />
-                  <StarIcon className="w-5 fill-primary" />
-                  <StarIcon className="w-5 fill-primary" />
-                  <StarIcon className="w-5 fill-primary" />
-                </div>
-                <p className="text-muted-foreground text-sm font-normal">
-                  This is an awesom product
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-3 pt-1">
-              <Avatar className={"w-10 h-10 border mt-0.5"}>
-                <AvatarFallback
-                  className={"bg-black text-sm text-white font-semibold"}
-                >
-                  SM
-                </AvatarFallback>
-              </Avatar>
-              <div>
-                <div className="mt-0 font-semibold">{"Kaushik Chowdhury"}</div>
-                <div className="flex gap-1">
-                  <StarIcon className="w-5 fill-primary" />
-                  <StarIcon className="w-5 fill-primary" />
-                  <StarIcon className="w-5 fill-primary" />
-                  <StarIcon className="w-5 fill-primary" />
-                  <StarIcon className="w-5 fill-primary" />
-                </div>
-                <p className="text-muted-foreground text-sm font-normal">
-                  This is an awesom product
-                </p>
-              </div>
+            {reviews && reviews.length > 0
+              ? reviews.map((item) => (
+                  <div key={item._id} className="flex gap-3 pt-1">
+                    <Avatar className={"w-10 h-10 border mt-0.5"}>
+                      <AvatarFallback
+                        className={"bg-black text-sm text-white font-semibold"}
+                      >
+                        {item?.username[0].toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <div className="mt-0 font-semibold">{item?.username}</div>
+                      <div className="">
+                        <StarRating rating={item?.reviewValue} />
+                      </div>
+                      <p className="text-muted-foreground text-sm font-normal">
+                        {item?.reviewMessage}
+                      </p>
+                    </div>
+                  </div>
+                ))
+              : null}
+
+            <div className="flex flex-col gap-3 pt-1">
+              <Label>Add a review</Label>
+              <StarRating
+                rating={ratingValue}
+                handleRatingValue={handleRatingValue}
+              />
+              <Input
+                type={"text"}
+                value={reviewMsg}
+                onChange={(e) => {
+                  setReviewMsg(e.target.value);
+                }}
+                placeholder="write a review..."
+              />
+              <Button
+                onClick={() => {
+                  handleReviewSubmit();
+                }}
+              >
+                Submit
+              </Button>
             </div>
           </div>
         </div>

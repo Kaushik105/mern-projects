@@ -3,21 +3,27 @@ import mongoose from "mongoose";
 const reviewSchema = new mongoose.Schema(
 	{
 		productId: {
-			type: mongoose.Types.Schema.ObjectId,
-			ref: "Product",
+			type: String,
 			required: true,
 		},
 		userId: {
-			type: mongoose.Types.Schema.ObjectId,
-			ref: "User",
+			type: String,
+			required: true,
+		},
+		username: {
+			type: String,
+			required: true,
 		},
 		rating: {
-			type: Number,
+			type: Number, 
 			min: 1,
 			max: 5,
 		},
-		message: {
+		reviewMessage: {
 			type: String,
+		},
+		reviewValue: {
+			type: Number,
 		},
 	},
 	{ timestamps: true }
