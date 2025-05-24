@@ -20,7 +20,7 @@ import {
 } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { useDispatch, useSelector } from "react-redux";
-import { logoutUser } from "@/store/auth-slice";
+import { logoutUser } from "@/store/authSlice";
 import CartWrapper from "./cartWrapper";
 import { fetchCartItems } from "@/store/shop/cartSlice";
 import { Badge } from "../ui/badge";
@@ -40,7 +40,7 @@ function MenuItems() {
         category: [getCurrentMenuItem.id],
       };
       sessionStorage.setItem("filters", JSON.stringify(filters));
-      if (location.pathname.includes("listing") && filters ) {
+      if (location.pathname.includes("listing") && filters) {
         setSearchParams(
           new URLSearchParams(`?category=${getCurrentMenuItem.id}`)
         );
@@ -93,7 +93,15 @@ function HeaderRightcontent() {
           className={"relative"}
         >
           <ShoppingCart className="w-6 h-6" />
-          {cartItems && cartItems?.length > 0 ? <Badge className={' absolute top-[-8px]  right-[-18px] text-sm rounded-full'}>{cartItems?.length}</Badge> : null}
+          {cartItems && cartItems?.length > 0 ? (
+            <Badge
+              className={
+                " absolute top-[-8px]  right-[-18px] text-sm rounded-full"
+              }
+            >
+              {cartItems?.length}
+            </Badge>
+          ) : null}
         </Button>
         <CartWrapper
           setOpenCartSheet={setOpenCartSheet}

@@ -1,7 +1,4 @@
 import React, { useEffect, useState } from "react";
-import slide1 from "../../assets/slide1.jpg";
-import slide3 from "../../assets/slide3.jpg";
-import slide2 from "../../assets/slide2.jpg";
 import { Button } from "@/components/ui/button";
 import {
   BathIcon,
@@ -29,6 +26,7 @@ import { useNavigate } from "react-router-dom";
 import { createCart } from "@/store/shop/cartSlice";
 import { toast } from "sonner";
 import ProductDetailsDialog from "@/components/shopping-view/ProductDetails";
+import { getFeatureImages } from "@/store/commonSlice";
 
 const categories = [
   { id: "men", label: "Men", icon: ShirtIcon },
@@ -49,14 +47,15 @@ const brands = [
 
 function ShoppingHome() {
   const dispatch = useDispatch();
-  const slides = [slide1, slide2, slide3];
   const { productList, productDetails } = useSelector(
     (state) => state.shopProducts
   );
   const [currentSlide, setCurrentSlide] = useState(0);
   const [openProductDialog, setOpenProductDialog] = useState(false);
-  const {user} = useSelector(state => state.auth)
-  const {cartItems}  = useSelector(state => state.shopCart)
+  const { user } = useSelector((state) => state.auth);
+  const { cartItems } = useSelector((state) => state.shopCart);
+  const { featureImageList } = useSelector((state) => state.commonFeature);
+  console.log(featureImageList);
 
   const navigate = useNavigate();
 
@@ -83,20 +82,20 @@ function ShoppingHome() {
 
   function handleAddtoCart(getCurrentProductId, getTotalStock) {
     let getCartItems = cartItems || [];
-        if (getCartItems.length) {
-          let indexOfCurrentItem = getCartItems.findIndex(
-            (item) => item.productId == getCurrentProductId
-          );
-    
-          if (indexOfCurrentItem > -1) {
-            let getQuantity = getCartItems[indexOfCurrentItem].quantity;
-    
-            if (getQuantity + 1 > getTotalStock) {
-              toast.error(`only ${getTotalStock} items can be added`);
-              return;
-            }
-          }
+    if (getCartItems.length) {
+      let indexOfCurrentItem = getCartItems.findIndex(
+        (item) => item.productId == getCurrentProductId
+      );
+
+      if (indexOfCurrentItem > -1) {
+        let getQuantity = getCartItems[indexOfCurrentItem].quantity;
+
+        if (getQuantity + 1 > getTotalStock) {
+          toast.error(`only ${getTotalStock} items can be added`);
+          return;
         }
+      }
+    }
     dispatch(
       createCart({
         userId: user._id,
@@ -113,9 +112,15 @@ function ShoppingHome() {
   }
 
   useEffect(() => {
+    dispatch(getFeatureImages());
+  }, []);
+
+  useEffect(() => {
     dispatch(getFilteredProducts({ filter: {}, sortBy: "price-lowtohigh" }));
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1 + slides.length) % slides.length);
+      setCurrentSlide(
+        (prev) => (prev + 1 + featureImageList.length) % featureImageList.length
+      );
     }, 2000);
 
     return () => clearInterval(interval);
@@ -124,9 +129,9 @@ function ShoppingHome() {
   return (
     <div className="flex flex-col min-h-screen">
       <div className="relative w-full h-[500px] overflow-hidden">
-        {slides.map((slide, index) => (
+        {featureImageList.map((slide, index) => (
           <img
-            src={slide}
+            src={slide?.image}
             key={index}
             className={`${
               index == currentSlide ? "opacity-100" : "opacity-0"
@@ -139,7 +144,8 @@ function ShoppingHome() {
           className={"absolute top-1/2 left-4 transform translate-y-1/2"}
           onClick={() => {
             setCurrentSlide(
-              (prev) => (prev - 1 + slides.length) % slides.length
+              (prev) =>
+                (prev - 1 + featureImageList.length) % featureImageList.length
             );
           }}
         >
@@ -148,7 +154,7 @@ function ShoppingHome() {
         <Button
           onClick={() => {
             setCurrentSlide(
-              (prev) => (prev + 1 - slides.length) % slides.length
+              (prev) => (prev + 1 - featureImageList.length) % featureImageList.length
             );
           }}
           variant={"outline"}

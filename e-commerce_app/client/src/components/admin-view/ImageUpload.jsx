@@ -12,10 +12,10 @@ function ProductImageUpload({
   setUploadedImageUrl,
   imageLoadingState,
   setImageLoadingState,
-  isEditMode
+  isEditMode,
+  isCustom= false
 }) {
   const inputRef = useRef(null);
-  
 
   function handleImageFileChange(e) {
     const selectedFile = e.target.files?.[0];
@@ -64,7 +64,7 @@ function ProductImageUpload({
   }, [imageFile]);
 
   return (
-    <div className="mb-5 w-full max-w-md">
+    <div className={`${isCustom ? "" : "max-w-md"} mb-5 w-full `}>
       <label
         className="text-lg font-semibold mb-2 
     block"

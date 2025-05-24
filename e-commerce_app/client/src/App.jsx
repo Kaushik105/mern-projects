@@ -17,7 +17,7 @@ import CheckAuth from "./components/common/CheckAuth";
 import UnauthPage from "./pages/unauth-page";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { checkAuth } from "./store/auth-slice";
+import { checkAuth } from "./store/authSlice";
 import { Skeleton } from "./components/ui/skeleton";
 import PaypalReturnPage from "./pages/shopping-view/PaypalReturn";
 import PaymentSuccessPage from "./pages/shopping-view/PaymentSuccess";
@@ -33,17 +33,16 @@ function App() {
     dispatch(checkAuth()).then((data) => {});
   }, [dispatch]);
 
-  if (isLoading) return (
-    <div className="flex w-full justify-center items-center h-screen flex-col space-y-3">
-      <Skeleton className="h-[250px] bg-slate-700 w-[500px] rounded-xl" />
-      <div className="space-y-2">
-        <Skeleton className="h-8 bg-slate-700 w-[500px]" />
-        <Skeleton className="h-8 bg-slate-700 w-[500px]" />
+  if (isLoading)
+    return (
+      <div className="flex w-full justify-center items-center h-screen flex-col space-y-3">
+        <Skeleton className="h-[250px] bg-slate-700 w-[500px] rounded-xl" />
+        <div className="space-y-2">
+          <Skeleton className="h-8 bg-slate-700 w-[500px]" />
+          <Skeleton className="h-8 bg-slate-700 w-[500px]" />
+        </div>
       </div>
-    </div>
-  );
-
-
+    );
 
   return (
     <div className="flex flex-col overflow-hidden bg-white">
