@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
 import { createNewOrder } from "@/store/shop/orderSlice";
 import { toast } from "sonner";
+import { BeatLoader } from "react-spinners";
 
 function ShoppingCheckout() {
   const { cartItems, cartId } = useSelector((state) => state.shopCart);
@@ -19,12 +20,14 @@ function ShoppingCheckout() {
   function handleInitiatePaypalPayment() {
     if (currentSelectedAddress == null) {
       toast.error("please select address to proceed");
+      return
     }
-if (cartItems.length === 0) {
-  toast.error("Your cart is empty",{
-    duration: 900
-  })
-}
+    if (cartItems.length === 0) {
+      toast.error("Your cart is empty", {
+        duration: 900,
+      });
+      return
+    }
     const orderData = {
       userId: user._id,
       cartId,
@@ -55,11 +58,10 @@ if (cartItems.length === 0) {
       paymentId: "",
       payerId: "",
     };
-    console.log(orderData, "checkout page");
 
+    setIsPaymentStart(true);
     dispatch(createNewOrder(orderData)).then((data) => {
-      console.log(data, "create new order");
-
+      
       if (data?.payload?.success) {
         setIsPaymentStart(true);
       } else {
@@ -95,7 +97,10 @@ if (cartItems.length === 0) {
       </div>
       <div className="grid grid-cols-2 gap-2 mt-5 p-2">
         <div className="w-full px-2">
-          <Address setCurrentSelectedAddress={setCurrentSelectedAddress} />
+          <Address
+            setCurrentSelectedAddress={setCurrentSelectedAddress}
+            currentSelectedAddress={currentSelectedAddress}
+          />
         </div>
         <div className="w-full px-2 border rounded-lg p-2">
           <div className="flex flex-col gap-3 p-2">
@@ -112,7 +117,11 @@ if (cartItems.length === 0) {
             </div>
           </div>
           <Button onClick={handleInitiatePaypalPayment} className={"w-full"}>
-            Checkout with PayPal
+            {isPaymentStart ? (
+              <BeatLoader loading={isPaymentStart} color="#FFF" />
+            ) : (
+              "Checkout with PayPal"
+            )}
           </Button>
         </div>
       </div>

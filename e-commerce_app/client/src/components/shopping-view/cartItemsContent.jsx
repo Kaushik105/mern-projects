@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
-import { DiamondPercent, Minus, Plus, Trash } from "lucide-react";
+import {  Minus, Plus, Trash } from "lucide-react";
 import { Input } from "../ui/input";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteCart, fetchCartItems, updateCart } from "@/store/shop/cartSlice";

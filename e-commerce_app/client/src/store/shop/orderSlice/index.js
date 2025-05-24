@@ -83,14 +83,14 @@ const shoppingOrderSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(capturePayment.fulfilled, (state, action) => {
+        console.log(action.payload);
+        
         state.isLoading = false;
-        state.approvalURL = action.payload.data.approvalURL;
-        state.orderId = action.payload.data.orderId;
+        state.orderDetails = action?.payload?.data;
       })
       .addCase(capturePayment.rejected, (state) => {
         state.isLoading = false;
-        state.approvalURL = null;
-        state.orderId = null;
+        state.orderDetails = null;
       })
       .addCase(getAllOrdersByUser.pending, (state) => {
         state.isLoading = true;

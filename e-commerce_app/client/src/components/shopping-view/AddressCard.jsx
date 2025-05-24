@@ -15,13 +15,16 @@ function AddressCard({
   handleAddressDelete,
   handleAddressEdit,
   setCurrentSelectedAddress,
+  currentSelectedAddress,
 }) {
   return (
     <Card
-      className={
-        "p-2 gap-0 min-w-50 min-h-48 my-2.5 justify-between overflow-hidden"
-      }
-      onClick={() => { addressCardItem?._id ? setCurrentSelectedAddress(addressCardItem) : null }}
+      className={`p-2 gap-0 min-w-50 min-h-48 my-2.5 justify-between overflow-hidden ${currentSelectedAddress?._id == addressCardItem?._id ? "border-green-600 border-3" : "border-black border-2 "}`}
+      onClick={() => {
+        addressCardItem?._id
+          ? setCurrentSelectedAddress(addressCardItem)
+          : null;
+      }}
     >
       <CardHeader className={"p-2 gap-0"}>
         <CardTitle>{addressCardItem?.notes}</CardTitle>

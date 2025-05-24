@@ -75,12 +75,14 @@ const createOrder = asyncHandler(async (req, res) => {
 				(link) => link.rel === "approval_url"
 			).href;
 
+			
+
 			return res
 				.status(200)
 				.json(
 					new ApiResponse(
 						200,
-						{ approvalURL, orderId: newlyCreatedOrder._id },
+						{ approvalURL, orderId: newlyCreatedOrder._id},
 						"order created successfully"
 					)
 				);
@@ -116,6 +118,8 @@ const capturePayment = asyncHandler(async (req, res) => {
 	await Cart.findByIdAndDelete(getCartId);
 
 	await order.save();
+	console.log(order);
+	
 
 	return res.status(200).json(new ApiResponse(200, order, "order confirmed"));
 });
