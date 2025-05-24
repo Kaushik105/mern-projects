@@ -29,7 +29,6 @@ export const getOrderDetailsForAdmin = createAsyncThunk(
 export const updateOrderStatus = createAsyncThunk(
   "adminOrderSlice/updateOrderStatus",
   async ({ orderId, formData }) => {
-    console.log(orderId);
 
     const response = await axios.put(
       `http://localhost:3000/api/admin/order/update/${orderId}`,

@@ -1,10 +1,11 @@
 import {Feature} from "../../models/feature.model.js";
+import { ApiError } from "../../utils/ApiError.js";
+import { ApiResponse } from "../../utils/ApiResponse.js";
+import { asyncHandler } from "../../utils/asyncHandler.js";
 
-const addFeatureImage = async (req, res) => {
-	try {
+const addFeatureImage =asyncHandler( async (req, res) => {
 		const { image } = req.body;
 
-		console.log(image, "image");
 
 		const featureImages = new Feature({
 			image,
@@ -16,30 +17,16 @@ const addFeatureImage = async (req, res) => {
 			success: true,
 			data: featureImages,
 		});
-	} catch (e) {
-		console.log(e);
-		res.status(500).json({
-			success: false,
-			message: "Some error occured!",
-		});
-	}
-};
+});
 
-const getFeatureImages = async (req, res) => {
-	try {
+const getFeatureImages =asyncHandler( async (req, res) => {
 		const images = await Feature.find({});
 
 		res.status(200).json({
 			success: true,
 			data: images,
 		});
-	} catch (e) {
-		console.log(e);
-		res.status(500).json({
-			success: false,
-			message: "Some error occured!",
-		});
 	}
-};
+);
 
 export { addFeatureImage, getFeatureImages };

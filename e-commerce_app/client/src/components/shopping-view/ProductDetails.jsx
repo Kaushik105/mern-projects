@@ -37,14 +37,11 @@ function ProductDetailsDialog({
           userId: user._id,
         })
       ).then((data) => {
-        console.log(data);
 
         if (data.payload?.success) {
-          console.log("success");
 
           toast.success("Review submitted successfully");
         } else {
-          console.log("not success");
           toast.info(data?.payload?.message);
         }
         dispatch(getReviews(productDetails._id));

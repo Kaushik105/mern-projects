@@ -55,7 +55,6 @@ function ShoppingHome() {
   const { user } = useSelector((state) => state.auth);
   const { cartItems } = useSelector((state) => state.shopCart);
   const { featureImageList } = useSelector((state) => state.commonFeature);
-  console.log(featureImageList);
 
   const navigate = useNavigate();
 

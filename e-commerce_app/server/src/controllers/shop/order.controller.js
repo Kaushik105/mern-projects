@@ -118,7 +118,6 @@ const capturePayment = asyncHandler(async (req, res) => {
 	await Cart.findByIdAndDelete(getCartId);
 
 	await order.save();
-	console.log(order);
 	
 
 	return res.status(200).json(new ApiResponse(200, order, "order confirmed"));
