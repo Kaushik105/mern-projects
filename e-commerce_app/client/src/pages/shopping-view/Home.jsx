@@ -112,22 +112,23 @@ function ShoppingHome() {
 
   useEffect(() => {
     dispatch(getFeatureImages());
+    dispatch(getFilteredProducts({ filter: {}, sortBy: "price-lowtohigh" }));
   }, []);
 
   useEffect(() => {
-    dispatch(getFilteredProducts({ filter: {}, sortBy: "price-lowtohigh" }));
     const interval = setInterval(() => {
       setCurrentSlide(
-        (prev) => (prev + 1 + featureImageList.length) % featureImageList.length
+        (prev) => ((prev + 1) % featureImageList.length)
       );
-    }, 2000);
-
+    }, 3000);
     return () => clearInterval(interval);
-  }, [setCurrentSlide]);
+  }, []);
+
+  
 
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="relative w-full h-[500px] overflow-hidden">
+      <div className="relative w-full h-[600px] overflow-hidden">
         {featureImageList.map((slide, index) => (
           <img
             src={slide?.image}
@@ -153,7 +154,7 @@ function ShoppingHome() {
         <Button
           onClick={() => {
             setCurrentSlide(
-              (prev) => (prev + 1 - featureImageList.length) % featureImageList.length
+              (prev) => (prev + 1) % featureImageList.length
             );
           }}
           variant={"outline"}

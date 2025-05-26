@@ -12,7 +12,7 @@ connectDB()
 		app.on("error", (error) => {
 			throw new ApiError(500, "Mongodb Connection failed", error);
 		});
-		app.listen(process.env.PORT, () => {
+		app.listen(process.env.PORT, "0.0.0.0", () => {
 			console.log("Server is running on :: ", process.env.PORT);
 		});
 	})
