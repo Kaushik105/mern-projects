@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { createSlice, createAsyncThunk } from  "@reduxjs/toolkit"
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 const initialState = {
   isLoading: true,
@@ -10,29 +10,22 @@ const initialState = {
 export const addAddress = createAsyncThunk(
   "addressSlice/addAddress",
   async ({ addressData }) => {
-    const response = await axios.post(
-      "http://localhost:3000/api/shop/address/add",
-      addressData,
-      {
-        headers: {
-          "Content-type": "application/json",
-        },
-      }
-    );
+    const response = await axios.post("/api/shop/address/add", addressData, {
+      headers: {
+        "Content-type": "application/json",
+      },
+    });
     return response.data;
   }
 );
 export const fetchAddress = createAsyncThunk(
   "addressSlice/fetchAddress",
   async ({ userId }) => {
-    const response = await axios.get(
-      `http://localhost:3000/api/shop/address/get/${userId}`,
-      {
-        headers: {
-          "Content-type": "application/json",
-        },
-      }
-    );
+    const response = await axios.get(`/api/shop/address/get/${userId}`, {
+      headers: {
+        "Content-type": "application/json",
+      },
+    });
     return response.data;
   }
 );
@@ -40,7 +33,7 @@ export const editAddress = createAsyncThunk(
   "addressSlice/editAddress",
   async ({ addressData, userId, addressId }) => {
     const response = await axios.put(
-      `http://localhost:3000/api/shop/address/update/${userId}/${addressId}`,
+      `/api/shop/address/update/${userId}/${addressId}`,
       addressData,
       {
         headers: {
@@ -55,7 +48,7 @@ export const deleteAddress = createAsyncThunk(
   "addressSlice/deleteAddress",
   async ({ userId, addressId }) => {
     const response = await axios.delete(
-      `http://localhost:3000/api/shop/address/delete/${userId}/${addressId}`,
+      `/api/shop/address/delete/${userId}/${addressId}`,
       {
         headers: {
           "Content-type": "application/json",
@@ -113,4 +106,4 @@ const addressSlice = createSlice({
   },
 });
 
-export default addressSlice.reducer
+export default addressSlice.reducer;

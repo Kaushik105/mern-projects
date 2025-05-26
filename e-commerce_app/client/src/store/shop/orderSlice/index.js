@@ -13,10 +13,7 @@ const initialState = {
 export const createNewOrder = createAsyncThunk(
   "shoppingOrderSlice/createNewOrder",
   async (orderData) => {
-    const response = await axios.post(
-      "http://localhost:3000/api/shop/order/create",
-      orderData
-    );
+    const response = await axios.post("/api/shop/order/create", orderData);
 
     return response.data;
   }
@@ -24,10 +21,11 @@ export const createNewOrder = createAsyncThunk(
 export const capturePayment = createAsyncThunk(
   "shoppingOrderSlice/capturePayment",
   async ({ paymentId, payerId, orderId }) => {
-    const response = await axios.post(
-      "http://localhost:3000/api/shop/order/capture",
-      { paymentId, payerId, orderId }
-    );
+    const response = await axios.post("/api/shop/order/capture", {
+      paymentId,
+      payerId,
+      orderId,
+    });
 
     return response.data;
   }
@@ -35,18 +33,14 @@ export const capturePayment = createAsyncThunk(
 export const getAllOrdersByUser = createAsyncThunk(
   "shoppingOrderSlice/getAllOrdersByUser",
   async ({ userId }) => {
-    const response = await axios.get(
-      `http://localhost:3000/api/shop/order/list/${userId}`
-    );
+    const response = await axios.get(`/api/shop/order/list/${userId}`);
     return response.data;
   }
 );
 export const getOrderDetails = createAsyncThunk(
   "shoppingOrderSlice/getOrderDetails",
   async ({ orderId }) => {
-    const response = await axios.get(
-      `http://localhost:3000/api/shop/order/details/${orderId}`
-    );
+    const response = await axios.get(`/api/shop/order/details/${orderId}`);
 
     return response.data;
   }
@@ -82,7 +76,7 @@ const shoppingOrderSlice = createSlice({
       .addCase(capturePayment.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(capturePayment.fulfilled, (state, action) => {        
+      .addCase(capturePayment.fulfilled, (state, action) => {
         state.isLoading = false;
         state.orderDetails = action?.payload?.data;
       })

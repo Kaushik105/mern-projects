@@ -10,18 +10,14 @@ const initialState = {
 export const getAllOrdersForAdmin = createAsyncThunk(
   "adminOrderSlice/getAllOrdersForAdmin",
   async () => {
-    const response = await axios.get(
-      `http://localhost:3000/api/admin/order/get`
-    );
+    const response = await axios.get(`/api/admin/order/get`);
     return response.data;
   }
 );
 export const getOrderDetailsForAdmin = createAsyncThunk(
   "adminOrderSlice/getOrderDetailsForAdmin",
   async ({ orderId }) => {
-    const response = await axios.get(
-      `http://localhost:3000/api/admin/order/details/${orderId}`
-    );
+    const response = await axios.get(`/api/admin/order/details/${orderId}`);
 
     return response.data;
   }
@@ -29,9 +25,8 @@ export const getOrderDetailsForAdmin = createAsyncThunk(
 export const updateOrderStatus = createAsyncThunk(
   "adminOrderSlice/updateOrderStatus",
   async ({ orderId, formData }) => {
-
     const response = await axios.put(
-      `http://localhost:3000/api/admin/order/update/${orderId}`,
+      `/api/admin/order/update/${orderId}`,
       formData
     );
 

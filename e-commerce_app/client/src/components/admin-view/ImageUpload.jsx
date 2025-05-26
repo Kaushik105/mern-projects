@@ -13,7 +13,7 @@ function ProductImageUpload({
   imageLoadingState,
   setImageLoadingState,
   isEditMode,
-  isCustom= false
+  isCustom = false,
 }) {
   const inputRef = useRef(null);
 
@@ -44,15 +44,12 @@ function ProductImageUpload({
     const data = new FormData();
     data.append("image", imageFile);
 
-      const response = await axios.post(
-        "http://localhost:3000/api/admin/products/upload-image",
-        data
-      );
+    const response = await axios.post("/api/admin/products/upload-image", data);
 
-      if (response?.data?.success) {
-        setUploadedImageUrl(response.data.data.url);
-        setImageLoadingState(false);
-      }
+    if (response?.data?.success) {
+      setUploadedImageUrl(response.data.data.url);
+      setImageLoadingState(false);
+    }
   };
 
   useEffect(() => {

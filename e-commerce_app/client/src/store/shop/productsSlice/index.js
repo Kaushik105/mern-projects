@@ -12,14 +12,11 @@ export const getFilteredProducts = createAsyncThunk(
   "shopProducts/getFilteredProducts",
   async ({ filterParams, sortParams }) => {
     const query = new URLSearchParams({ ...filterParams, sortBy: sortParams });
-    const response = await axios.get(
-      `http://localhost:3000/api/shop/products/get?${query}`,
-      {
-        headers: {
-          "Content-Type": "application/json ",
-        },
-      }
-    );
+    const response = await axios.get(`/api/shop/products/get?${query}`, {
+      headers: {
+        "Content-Type": "application/json ",
+      },
+    });
 
     return response?.data;
   }
@@ -29,7 +26,7 @@ export const getProductDetails = createAsyncThunk(
   "shopProducts/getProductDetails",
   async (id) => {
     const response = await axios.get(
-      `http://localhost:3000/api/shop/products/get/${id}`,
+      `/api/shop/products/get/${id}`,
       {},
       {
         headers: {
