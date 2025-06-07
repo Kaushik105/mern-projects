@@ -20,7 +20,7 @@ import { useSearchParams } from "react-router-dom";
 import ProductDetailsDialog from "@/components/shopping-view/ProductDetails";
 import { createCart } from "@/store/shop/cartSlice";
 import { Skeleton } from "@/components/ui/skeleton";
-import { toast } from "sonner"; 
+import { toast } from "sonner";
 
 function createSearchParamHelper(filters) {
   const queryParams = [];
@@ -35,7 +35,6 @@ function createSearchParamHelper(filters) {
   return queryParams.join("&");
 }
 
-
 function ShoppingListing() {
   const { productList, productDetails, isLoading } = useSelector(
     (state) => state.shopProducts
@@ -43,8 +42,6 @@ function ShoppingListing() {
   const [sort, setSort] = useState("price-lowtohigh");
   const [filters, setFilters] = useState((prev) => {
     const stored = sessionStorage.getItem("filters");
-    console.log(stored);
-    
     return stored ? JSON.parse(stored) : null;
   });
   const { user } = useSelector((state) => state.auth);
@@ -52,7 +49,7 @@ function ShoppingListing() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [openProductDialog, setOpenProductDialog] = useState(false);
   const { cartItems } = useSelector((state) => state.shopCart);
-  const getSearchParams = searchParams.get("category")
+  const getSearchParams = searchParams.get("category");
 
   function handleSort(value) {
     setSort(value);
@@ -122,12 +119,12 @@ function ShoppingListing() {
 
   useEffect(() => {
     let navFilters = JSON.parse(sessionStorage.getItem("filters"));
-    setFilters(navFilters)
-  
-  }, [getSearchParams])
-  
+    if (filters?.category?.[0] !== navFilters?.category?.[0]) {
+      setFilters(navFilters);
+    }
+  }, [getSearchParams]);
 
-  useEffect(() => {            
+  useEffect(() => {
     if (filters && Object.keys(filters).length > 0) {
       const queryString = createSearchParamHelper(filters);
       setSearchParams(new URLSearchParams(queryString));

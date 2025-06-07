@@ -24,20 +24,17 @@ function ShoppingOrdersView() {
   const { orderList, orderDetails } = useSelector((state) => state.shopOrder);
   const dispatch = useDispatch();
 
-
   function handleGetOrderDetails(orderId) {
-    dispatch(getOrderDetails({ orderId }));
-    if (orderDetails) {
-      setOpenDetailsDialog(true);
-    }
+    dispatch(getOrderDetails({ orderId })).then((data) => {
+      if (data?.payload?.success) {
+        setOpenDetailsDialog(true);
+      }
+    });
   }
 
   useEffect(() => {
     dispatch(getAllOrdersByUser({ userId: user._id }));
   }, [dispatch]);
-
-
-
 
   return (
     <div>
@@ -64,25 +61,14 @@ function ShoppingOrdersView() {
                       <TableCell>{orderItem.orderStatus}</TableCell>
                       <TableCell>$ {orderItem.totalAmount}</TableCell>
                       <TableCell>
-                        <Dialog
-                          open={openDetailsDialog}
-                          onOpenChange={() => {
-                            setOpenDetailsDialog(false);
-                            dispatch(resetOrderDetails());
+                        <Button
+                          onClick={() => {
+                            setOpenDetailsDialog(true);
+                            handleGetOrderDetails(orderItem._id);
                           }}
                         >
-                          <Button
-                            onClick={() => {
-                              setOpenDetailsDialog(true);
-                              handleGetOrderDetails(orderItem._id);
-                            }}
-                          >
-                            View Details
-                          </Button>
-                          <ShoppingOrderDetailsView
-                            orderDetails={orderDetails && orderDetails}
-                          />
-                        </Dialog>
+                          View Details
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))
@@ -91,6 +77,15 @@ function ShoppingOrdersView() {
           </Table>
         </CardContent>
       </Card>
+      <Dialog
+        open={openDetailsDialog}
+        onOpenChange={() => {
+          setOpenDetailsDialog(false);
+          dispatch(resetOrderDetails());
+        }}
+      >
+        <ShoppingOrderDetailsView orderDetails={orderDetails && orderDetails} />
+      </Dialog>
     </div>
   );
 }

@@ -63,6 +63,7 @@ function ShoppingHome() {
     let filters = {
       [sectionId]: [filterItem],
     };
+
     sessionStorage.setItem("filters", JSON.stringify(filters));
     navigate("/shop/listing");
   }
