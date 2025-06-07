@@ -116,15 +116,14 @@ function ShoppingHome() {
   }, []);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide(
-        (prev) => ((prev + 1) % featureImageList.length)
-      );
-    }, 3000);
+    let interval;
+    if (featureImageList) {
+      interval = setInterval(() => {
+        setCurrentSlide((prev) => (prev + 1) % featureImageList.length);
+      }, 3000);
+    }
     return () => clearInterval(interval);
-  }, []);
-
-  
+  }, [featureImageList]);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -153,9 +152,7 @@ function ShoppingHome() {
         </Button>
         <Button
           onClick={() => {
-            setCurrentSlide(
-              (prev) => (prev + 1) % featureImageList.length
-            );
+            setCurrentSlide((prev) => (prev + 1) % featureImageList.length);
           }}
           variant={"outline"}
           size={"icon"}
