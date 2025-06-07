@@ -112,7 +112,9 @@ function ShoppingHome() {
 
   useEffect(() => {
     dispatch(getFeatureImages());
-    dispatch(getFilteredProducts({ filter: {}, sortBy: "price-lowtohigh" }));
+    dispatch(
+      getFilteredProducts({ filterParams: {}, sortParams: "price-lowtohigh" })
+    );
   }, []);
 
   useEffect(() => {

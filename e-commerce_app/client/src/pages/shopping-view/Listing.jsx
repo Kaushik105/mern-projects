@@ -20,7 +20,7 @@ import { useSearchParams } from "react-router-dom";
 import ProductDetailsDialog from "@/components/shopping-view/ProductDetails";
 import { createCart } from "@/store/shop/cartSlice";
 import { Skeleton } from "@/components/ui/skeleton";
-import { toast } from "sonner";
+import { toast } from "sonner"; 
 
 function createSearchParamHelper(filters) {
   const queryParams = [];
@@ -35,20 +35,24 @@ function createSearchParamHelper(filters) {
   return queryParams.join("&");
 }
 
+
 function ShoppingListing() {
   const { productList, productDetails, isLoading } = useSelector(
     (state) => state.shopProducts
   );
   const [sort, setSort] = useState("price-lowtohigh");
-  const [filters, setFilters] = useState(
-    JSON.parse(sessionStorage.getItem("filters"))
-  );
+  const [filters, setFilters] = useState((prev) => {
+    const stored = sessionStorage.getItem("filters");
+    console.log(stored);
+    
+    return stored ? JSON.parse(stored) : null;
+  });
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
   const [openProductDialog, setOpenProductDialog] = useState(false);
-  const getSearchParams = searchParams.get("category");
   const { cartItems } = useSelector((state) => state.shopCart);
+  const getSearchParams = searchParams.get("category")
 
   function handleSort(value) {
     setSort(value);
@@ -117,19 +121,18 @@ function ShoppingListing() {
   }
 
   useEffect(() => {
-    setSort("price-lowtohigh");
-    setFilters(JSON.parse(sessionStorage.getItem("filters")));
-    dispatch(getFilteredProducts(filters));
-  }, [getSearchParams]);
+    let navFilters = JSON.parse(sessionStorage.getItem("filters"));
+    setFilters(navFilters)
+  
+  }, [getSearchParams])
+  
 
-  useEffect(() => {
+  useEffect(() => {            
     if (filters && Object.keys(filters).length > 0) {
       const queryString = createSearchParamHelper(filters);
       setSearchParams(new URLSearchParams(queryString));
     }
-  }, [filters]);
 
-  useEffect(() => {
     sessionStorage.setItem("filters", JSON.stringify(filters));
     if (filters !== null && sort !== null) {
       dispatch(

@@ -27,26 +27,28 @@ import { Badge } from "../ui/badge";
 
 function MenuItems() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
 
   function handleNavigateToListing(getCurrentMenuItem) {
     let filters;
     if (
-      !(getCurrentMenuItem.id == "products" || getCurrentMenuItem.id == "home")
+      !(
+        getCurrentMenuItem.id == "products" ||
+        getCurrentMenuItem.id == "home" ||
+        getCurrentMenuItem.id == "search" || location.pathname.includes("home")
+      )
     ) {
       filters = {
         category: [getCurrentMenuItem.id],
       };
       sessionStorage.setItem("filters", JSON.stringify(filters));
-      if (location.pathname.includes("listing") && filters) {
-        setSearchParams(
-          new URLSearchParams(`?category=${getCurrentMenuItem.id}`)
-        );
-      }
+      setSearchParams(
+        new URLSearchParams(`?category=${getCurrentMenuItem.id}`)
+      );
+    } else {
+      navigate(getCurrentMenuItem.path);
     }
-    navigate(getCurrentMenuItem.path);
   }
 
   return (
