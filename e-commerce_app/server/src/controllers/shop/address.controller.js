@@ -1,13 +1,13 @@
 import { asyncHandler } from "../../utils/asyncHandler.js";
 import { ApiResponse } from "../../utils/ApiResponse.js";
 import { ApiError } from "../../utils/ApiError.js";
-import { User } from "../../models/User.model.js";
+import { User } from "../../models/user.model.js";
 import { Address } from "../../models/address.model.js";
 
 const addAddress = asyncHandler(async (req, res) => {
 	const { userId, address, city, pincode, phone, notes } = req.body;
 
-	if (!(userId || address || city || pincode || phone || notes)) {
+	if (!(userId && address && city && pincode && phone && notes)) {
 		return res.json(new ApiError(400, "invalid parameters"));
 	}
 
@@ -63,7 +63,7 @@ const editAddress = asyncHandler(async (req, res) => {
 	const { address, city, pincode, phone, notes } = req.body;
 	const { userId, addressId } = req.params;
 
-	if (!(userId || address || city || pincode || phone || notes || addressId)) {
+	if (!(userId && address && city && pincode && phone && notes && addressId)) {
 		return res.json(new ApiError(400, "invalid parameters"));
 	}
 
@@ -89,7 +89,7 @@ const editAddress = asyncHandler(async (req, res) => {
 });
 const deleteAddress = asyncHandler(async (req, res) => {
 	const { userId, addressId } = req.params;
-	if (!(userId || addressId)) {
+	if (!(userId && addressId)) {
 		return res.json(new ApiError(400, "invalid parameters"));
 	}
 

@@ -1,4 +1,4 @@
-import Router from "express"
+import { Router } from "express"
 import { addToCart, deleteCartItem, fetchCartItems, updateCartItemQty } from "../../controllers/shop/cart.controller.js"
 
 

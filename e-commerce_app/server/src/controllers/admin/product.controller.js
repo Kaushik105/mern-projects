@@ -63,7 +63,7 @@ const addProduct = asyncHandler(async (req, res) => {
 
 const fetchAllProducts = asyncHandler(async (req, res) => {
 	const products = await Product.find();
-	if (products.length === 0) {
+	if (!products) {
 		return res.json(new ApiError(500, "product fetching failed"));
 	}
 	return res.json(new ApiResponse(200, products, "All products fetched"));

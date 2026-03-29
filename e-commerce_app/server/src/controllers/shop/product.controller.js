@@ -8,12 +8,13 @@ const getFilteredProducts = asyncHandler(async (req, res) => {
 
 	let filters = {};
 
+
 	if (category.length) {
-		filters.category = { $in: category.split(",") };
+		filters.category = { $in: category.split(",").map((cat) => cat.charAt(0).toUpperCase() + cat.slice(1)) };
 	}
 
 	if (brand.length) {
-		filters.brand = { $in: brand.split(",") };
+		filters.brand = { $in: brand.split(",").map((brand) => brand.charAt(0).toUpperCase() + brand.slice(1)) };
 	}
 
 	let sort = {};

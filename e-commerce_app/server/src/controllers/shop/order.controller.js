@@ -53,7 +53,7 @@ const createOrder = asyncHandler(async (req, res) => {
 
 	paypal.payment.create(createPaymentJson, async (error, payentInfo) => {
 		if (error) {
-			return res.json(new ApiError(500, "error while creating paypal payment"));
+			return res.status(500).json(new ApiError(500, "error while creating paypal payment"));
 		} else {
 			const newlyCreatedOrder = new Order({
 				userId,
@@ -71,9 +71,15 @@ const createOrder = asyncHandler(async (req, res) => {
 			});
 
 			await newlyCreatedOrder.save();
-			const approvalURL = payentInfo.links.find(
+			const approvalURLLink = payentInfo.links.find(
 				(link) => link.rel === "approval_url"
-			).href;
+			);
+
+			if (!approvalURLLink) {
+				return res.status(500).json(new ApiError(500, "approval URL not found in paypal response"));
+			}
+
+			const approvalURL = approvalURLLink.href;
 
 			
 
@@ -107,6 +113,10 @@ const capturePayment = asyncHandler(async (req, res) => {
 
 		if (!product) {
 			return res.json(new ApiError(500, "product not found"));
+		}
+
+		if (product.totalStock < item.quantity) {
+			return res.status(400).json(new ApiError(400, `Insufficient stock for product: ${product.title}`));
 		}
 
 		product.totalStock -= item.quantity;
